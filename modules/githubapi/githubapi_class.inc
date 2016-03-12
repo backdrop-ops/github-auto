@@ -58,15 +58,15 @@ class GithubAPI
   }
 
   public function isError() {
-    return $this->curl->error;
+    return $this->curl->curlError;
   }
 
   public function testingGetHeaders() {
     return array (
-        'code' => $this->curl->error_code,
-        'message' => $this->curl->error_message,
-        'request_headers' => $this->curl->request_headers,
-        'response_headers' => $this->curl->response_headers,
+        'code' => $this->curl->curlErrorCode,
+        'message' => $this->curl->curlErrorMessage,
+        'request_headers' => $this->curl->requestHeaders,
+        'response_headers' => $this->curl->responseHeaders,
         'curl' => $this->curl,
       );
   }
@@ -74,10 +74,10 @@ class GithubAPI
   public function getErrors() {
     if($this->isError()){
       return array (
-        'code' => $this->curl->error_code,
-        'message' => $this->curl->error_message,
-        'request_headers' => $this->curl->request_headers,
-        'response_headers' => $this->curl->response_headers,
+        'code' => $this->curl->curlErrorCode,
+        'message' => $this->curl->curlErrorMessage,
+        'request_headers' => $this->curl->requestHeaders,
+        'response_headers' => $this->curl->responseHeaders,
       );
     }
     return FALSE;
@@ -108,7 +108,7 @@ class GithubAPI
     if($this->age){
       return $this->age;
     }
-    if($age_header = $this->curl->response_headers['Cache-Control']){
+    if($age_header = $this->curl->responseHeaders['Cache-Control']){
       list($type, $maxage, $smaxage) = explode(',', $age_header);
       list($name,$age) = explode('=', $maxage);
       if($user->uid == 0){
