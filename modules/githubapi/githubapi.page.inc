@@ -65,7 +65,7 @@ function githubapi_hook_submit($form, &$form_state) {
     if($hook){
       backdrop_set_message('<pre>' . print_r($hook,true). '</pre>');
       
-      $rid = db_insert('github_repositories')
+      $rid = db_insert('githubapi_repositories')
           ->fields(
             array(
               'repo_id' => $data->id,
