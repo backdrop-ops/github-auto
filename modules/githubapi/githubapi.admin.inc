@@ -47,9 +47,8 @@ function githubapi_admin_settings() {
 function githubapi_admin_settings_submit($form, &$form_state) {
 
   $config = config('githubapi.settings');
-  foreach ($form_state['values'] as $key => $value) {
-    $config->set($key, $value);
-  }
+  $config->set('client_id', $form_state['values']['client_id']);
+  $config->set('client_secret', $form_state['values']['client_secret']);
   $config->save();
   backdrop_set_message(t('The configuration options have been saved.'));
 }
