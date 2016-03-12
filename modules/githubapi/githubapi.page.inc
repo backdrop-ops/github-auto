@@ -10,6 +10,16 @@
  
 function githubapi_repos(){
   module_load_include('inc', 'githubapi', 'githubapi_class');
-
-  return t('Repos list');
+  $config = config('githubapi.settings');
+  $token = $config->get('token');
+  
+  $githubapi = new GithubAPI();
+    
+  $githubapi->setOwnerName('itpatrol');
+  $githubapi->setRepoName('test');
+  $githubapi->setToken($token); 
+  
+  $data = $gitlc_github->getRepo();
+  $output = '<pre>' . print_r($data,true). '</pre>';
+  return $output;
 }
