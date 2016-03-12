@@ -86,6 +86,7 @@ function gitlc_github_payload_process() {
       );
       backdrop_write_record('githubapi_payload', $record);
 
+      module_invoke_all('githubapi_payload', $event_name, $record);
     }
   }
 }
