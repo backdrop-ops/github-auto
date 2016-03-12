@@ -46,6 +46,28 @@ function githubapi_hook_submit($form, &$form_state) {
   $githubapi->setRepoName($owner_repo[1]);
   $githubapi->setToken($token);
 
-  $data = $githubapi->getRepo();
-  backdrop_set_message('<pre>' . print_r($data,true). '</pre>');
+  if($data = $githubapi->getRepo()){
+  
+    global $base_url;
+    global $base_path;
+    
+    $settings = array(
+      'name' => GITHUB_HOOK_NAME,
+      'config' => (object) array(
+          'url' => $base_url . $base_path . GITHUB_PAYLOAD_PATH,
+          'content_type' => GITHUB_PAYLOAD_CONTENT_TYPE,
+        ),
+      'events' => array ('push', 'pull_request', 'create', 'delete', 'release' ),
+      'active' => true,
+    );
+    $githubapi->reInitCurl();
+    $hook = $githubapi->createHook($settings);
+    if($hook){
+      backdrop_set_message('<pre>' . print_r($hook,true). '</pre>');
+      return $hook;
+    }
+    return FALSE;
+    
+    backdrop_set_message('<pre>' . print_r($data,true). '</pre>');
+  }
 }
