@@ -1,4 +1,5 @@
 <?php
+use \Curl\Curl;
 
 require_once 'libraries/php-curl-class/src/Curl/Curl.php';
 
