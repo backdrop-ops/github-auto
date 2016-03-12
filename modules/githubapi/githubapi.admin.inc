@@ -92,6 +92,8 @@ function githubapi_get_access_token() {
       $token = $result['access_token'];
       $config->set('token', $token);
       $config->save();
+      backdrop_set_message(t('We connected to GitHub now .'));
+      backdrop_goto();
     }
   }
   // If we didn't get a token or code, connection to Github failed.
