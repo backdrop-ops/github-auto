@@ -1,7 +1,9 @@
 <?php
 use \Curl\Curl;
 
+require_once 'libraries/php-curl-class/src/Curl/CaseInsensitiveArray.php';
 require_once 'libraries/php-curl-class/src/Curl/Curl.php';
+
 
 
 class GithubAPI
