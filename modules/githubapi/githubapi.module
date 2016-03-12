@@ -33,15 +33,29 @@ function githubapi_menu() {
 
   $items['admin/config/system/githubapi'] = array(
     'title' => 'github API settings',
+    'page callback' => 'githubapi_repos',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer site configuration'),
+    'file' => 'githubapi.page.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  
+  $items['admin/config/system/githubapi/list'] = array(
+    'title' => 'Repos list',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+
+  $items['admin/config/system/githubapi/settings'] = array(
+    'title' => 'github API settings',
     'page callback' => 'backdrop_get_form',
     'page arguments' => array('githubapi_admin_settings'),
     'access callback' => 'user_access',
     'access arguments' => array('administer site configuration'),
     'description' => 'Github API configuration.',
     'file' => 'githubapi.admin.inc',
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_LOCAL_TASK,
   );
-
+  
   $items['githubapi/register'] = array(
     'type' => MENU_CALLBACK,
     'title' => 'Connect to Github',

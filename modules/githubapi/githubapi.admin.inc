@@ -5,7 +5,7 @@
  */
 
  /**
- * Menu callback for admin/config/system/githubapi.
+ * Menu callback for admin/config/system/githubapi/settings.
  */
 function githubapi_admin_settings() {
   $config = config('githubapi.settings');
