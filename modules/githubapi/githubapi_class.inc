@@ -8,7 +8,7 @@ require_once 'libraries/php-curl-class/src/Curl/Curl.php';
 
 class GithubAPI
 {
-  protected $comitter = array('name' => 'GitLC BOT', 'email' => 'admin@git.lc');
+
   protected $curl = FALSE;
   protected $token = FALSE;
   protected $cache_folder = FALSE;
@@ -23,9 +23,7 @@ class GithubAPI
 
 
   public function __construct() {
-    $this->setCommitter();
     $this->reInitCurl();
-    $this->setToken();
     $this->setDebug();
   }
 
@@ -42,15 +40,6 @@ class GithubAPI
 
   public function setRepoName($repo_name) {
     $this->repo_name = $repo_name;
-  }
-
-  public function setCommitter($name, $email) {
-    $this->comitter['name'] = $name;
-    $this->comitter['email'] = $email;
-  }
-
-  public function getCommittrer() {
-    return $this->comitter;
   }
 
   public function setDebug($debug = FALSE)
