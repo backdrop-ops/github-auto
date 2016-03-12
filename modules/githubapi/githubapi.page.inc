@@ -19,7 +19,7 @@ function githubapi_repos(){
   $githubapi->setRepoName('test');
   $githubapi->setToken($token); 
   
-  $data = $gitlc_github->getRepo();
+  $data = $githubapi->getRepo();
   $output = '<pre>' . print_r($data,true). '</pre>';
   return $output;
 }
