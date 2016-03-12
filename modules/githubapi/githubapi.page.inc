@@ -34,7 +34,7 @@ function githubapi_hook(){
  */
 function githubapi_hook_submit($form, &$form_state) {
 
-  $owner_repo = explode("/", $form_state['values']);
+  $owner_repo = explode("/", $form_state['values']['owner_repo_path']);
 
   module_load_include('inc', 'githubapi', 'githubapi_class');
   $config = config('githubapi.settings');
