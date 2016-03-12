@@ -5,7 +5,13 @@
  *
  * @author Gor Martsen <gor@me.com>
  */
- 
+
+ // URL Github API.
+define('GITHUB_API_URI', 'https://api.github.com');
+
+// URL Github.
+define('GITHUB_URI', 'https://github.com');
+
  /**
  * Implements hook_config_info().
  */
@@ -23,7 +29,6 @@ function githubapi_config_info() {
 function githubapi_menu() {
   $items = array();
 
-  // Submissions listing.
   $items['admin/config/system/githubapi'] = array(
     'title' => 'github API settings',
     'page callback' => 'backdrop_get_form',
@@ -34,5 +39,53 @@ function githubapi_menu() {
     'file' => 'githubapi.admin.inc',
     'type' => MENU_NORMAL_ITEM,
   );
+
+  $items['githubapi/register'] = array(
+    'type' => MENU_CALLBACK,
+    'title' => 'Connect to Github',
+    'page callback' => 'githubapi_get_access_token',
+    'access callback' => TRUE,
+    'file' => 'githubapi.admin.inc',
+  );
+
+  $items['githubapi/payload'] = array(
+    'type' => MENU_CALLBACK,
+    'title' => 'Payload callback',
+    'page callback' => 'gitlc_github_payload_process',
+    'access callback' => TRUE,
+  );
+
   return $items;
+}
+
+/**
+ * Implements https://developer.github.com/webhooks/#payloads.
+ */
+function gitlc_github_payload_process() {
+  if (isset($_SERVER['HTTP_X_GITHUB_EVENT'])) {
+    $received_json = file_get_contents('php://input', TRUE);
+
+    if (!$event = json_decode($received_json)) {
+      return '';
+    }
+
+    $event_name = isset($_SERVER['HTTP_X_GITHUB_EVENT']) ? $_SERVER['HTTP_X_GITHUB_EVENT'] : NULL;
+
+    if ($event_name) {
+      $sender = $event->sender;
+      $repository = $event->repository;
+      unset($event->repository);
+      unset($event->sender);
+
+      $record = array(
+        'type' => $event_name,
+        'sender' => $sender,
+        'repository' => $repository,
+        'data' => $event,
+        'timestamp' => REQUEST_TIME,
+      );
+      backdrop_write_record('githubapi_payload', $record);
+
+    }
+  }
 }

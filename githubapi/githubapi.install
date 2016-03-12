@@ -14,7 +14,7 @@ function githubapi_install() {
  * Implements hook_schema().
  */
 function githubapi_schema() {
-  $schema['githubapi'] = array(
+  $schema['githubapi_payload'] = array(
     'description' => 'Stores githubapi-specific payload logs.',
     'fields' => array(
       'id' => array(
