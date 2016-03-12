@@ -27,6 +27,12 @@ function githubapi_admin_settings() {
     '#type' => 'submit',
     '#value' => t('Save configuration'),
   );
+  $form['actions']['auth'] = array(
+    '#type' => 'submit',
+    '#value' => t('Get Token for backdrop-ci'),
+    '#submit' => array('githubapi_link_user_submit'),
+  );
+
   return $form;
 }
 
@@ -41,6 +47,27 @@ function githubapi_admin_settings_submit($form, &$form_state) {
   }
   $config->save();
   backdrop_set_message(t('The configuration options have been saved.'));
+}
+
+/**
+ * Get token handler for the githubapi_admin_settings() form.
+ */
+function githubapi_link_user_submit($form, &$form_state){
+  global $base_url;
+  
+  $config = config('githubapi.settings');
+  $params = array();
+  $params['client_id'] = $config->get('client_id');
+  $params['scope'] = GITHUB_SCOPE;
+
+  $params['redirect_uri'] = $base_url . '/githubapi/register';
+
+  $query = http_build_query($params);
+
+  $link = GITHUB_URI . '/login/oauth/authorize?' . $query;
+
+  backdrop_goto($link, array('absolute' => TRUE));
+
 }
 
 /**

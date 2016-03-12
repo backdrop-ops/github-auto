@@ -12,6 +12,8 @@ define('GITHUB_API_URI', 'https://api.github.com');
 // URL Github.
 define('GITHUB_URI', 'https://github.com');
 
+define('GITHUB_SCOPE', 'user:email,repo,admin:repo_hook,read:org');
+
  /**
  * Implements hook_config_info().
  */
