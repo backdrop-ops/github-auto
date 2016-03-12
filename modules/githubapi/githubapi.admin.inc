@@ -27,7 +27,8 @@ function githubapi_admin_settings() {
     '#type' => 'submit',
     '#value' => t('Save configuration'),
   );
-  if(empty($config->get('token'))){
+  $token = $config->get('token');
+  if(empty($token)){
     $form['actions']['auth'] = array(
       '#type' => 'submit',
       '#value' => t('Get Token for backdrop-ci'),
