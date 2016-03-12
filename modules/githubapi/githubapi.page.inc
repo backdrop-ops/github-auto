@@ -47,7 +47,7 @@ function githubapi_hook_submit($form, &$form_state) {
   $githubapi->setToken($token);
 
   if($data = $githubapi->getRepo()){
-  
+    backdrop_set_message('<pre>' . print_r($data,true). '</pre>');
     global $base_url;
     global $base_path;
     
@@ -64,10 +64,34 @@ function githubapi_hook_submit($form, &$form_state) {
     $hook = $githubapi->createHook($settings);
     if($hook){
       backdrop_set_message('<pre>' . print_r($hook,true). '</pre>');
+      
+      $rid = db_insert('github_repositories')
+          ->fields(
+            array(
+              'repo_id' => $data->id,
+              'owner' => $data->owner->login,
+              'name' => $data->name,
+              'private' => (int) $data->private,
+              'cache' => serialize($data),
+              'timestamp' => REQUEST_TIME,
+            )
+          )
+          ->execute();
+      
+      db_insert('githubapi_hooks')
+        ->fields(
+            array(
+            'rid' => $rid,
+            'hook_id' => $hook->id,
+            'child' => (int) ($hook->url === TRUE),
+            'timestamp' => REQUEST_TIME,
+            )
+        )
+        ->execute();
       return $hook;
     }
     return FALSE;
     
-    backdrop_set_message('<pre>' . print_r($data,true). '</pre>');
+    
   }
 }
