@@ -27,11 +27,15 @@ function githubapi_admin_settings() {
     '#type' => 'submit',
     '#value' => t('Save configuration'),
   );
-  $form['actions']['auth'] = array(
-    '#type' => 'submit',
-    '#value' => t('Get Token for backdrop-ci'),
-    '#submit' => array('githubapi_link_user_submit'),
-  );
+  if(empty($config->get('token'))){
+    $form['actions']['auth'] = array(
+      '#type' => 'submit',
+      '#value' => t('Get Token for backdrop-ci'),
+      '#submit' => array('githubapi_link_user_submit'),
+    );
+  }else{
+    backdrop_set_message(t('Bot linked to github!'));
+  }
 
   return $form;
 }
