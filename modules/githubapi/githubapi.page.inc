@@ -57,7 +57,7 @@ function githubapi_hook_submit($form, &$form_state) {
           'url' => $base_url . $base_path . GITHUB_PAYLOAD_PATH,
           'content_type' => GITHUB_PAYLOAD_CONTENT_TYPE,
         ),
-      'events' => array ('push', 'pull_request', 'create', 'delete', 'release' ),
+      'events' => array ('push', 'pull_request', 'create', 'delete', 'release', 'issue', 'issue_comment', 'follow', 'fork', 'status' ),
       'active' => true,
     );
     $githubapi->reInitCurl();
