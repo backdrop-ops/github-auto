@@ -1,0 +1,63 @@
+<?php
+/**
+ * @file
+ * Install, update, and uninstall functions for the githubapi module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function githubapi_install() {
+}
+
+/**
+ * Implements hook_schema().
+ */
+function githubapi_schema() {
+  $schema['githubapi'] = array(
+    'description' => 'Stores githubapi-specific payload logs.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'Primary Key: Unique report ID.',
+        'type' => 'serial',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'Payload type.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'sender' => array(
+        'description' => 'Event sender.',
+        'type' => 'blob',
+        'size' => 'big',
+        'serialize' => TRUE,
+      ),
+      'repository' => array(
+        'description' => 'Event repository.',
+        'type' => 'blob',
+        'size' => 'big',
+        'serialize' => TRUE,
+      ),
+      'data' => array(
+        'description' => 'Event data execept sender and repository.',
+        'type' => 'blob',
+        'size' => 'big',
+        'serialize' => TRUE,
+      ),
+      'timestamp' => array(
+        'description' => 'Unix timestamp of when report created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ),
+    ),
+    'primary key' => array('id'),
+    'indexes' => array(
+      'type' => array('type'),
+    ),
+  );
+  return $schema;
+}
