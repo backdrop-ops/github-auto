@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * This module provides github API integration.
+ *
+ * @author Gor Martsen <gor@me.com>
+ */
+ 
+ /**
+ * Implements hook_config_info().
+ */
+function githubapi_config_info() {
+  $prefixes['githubapi.settings'] = array(
+    'label' => t('github API settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function githubapi_menu() {
+  $items = array();
+
+  // Submissions listing.
+  $items['admin/config/system/githubapi'] = array(
+    'title' => 'github API settings',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('githubapi_admin_settings'),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer site configuration'),
+    'description' => 'Github API configuration.',
+    'file' => 'githubapi.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
