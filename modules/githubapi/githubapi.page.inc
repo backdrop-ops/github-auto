@@ -38,6 +38,38 @@ function githubapi_repos(){
   return $output;
 }
 
+function githubapi_hook_remove($form, &$form_state, $rid){
+  $repo = db_select('githubapi_repositories', 'gr')
+    ->fields('gr')
+    ->condition('id', $rid)
+    ->execute()
+    ->fetchObject();
+    
+  if(empty($repo)){
+    backdrop_goto('admin/config/system/githubapi/list');
+  }
+    
+  $form_state['repo'] = $repo;
+  
+  $form['message'] = array(
+    '#markup' => t('Are you sure want to delete this repo from this app?'),
+  );
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Delete'),
+  );
+
+  return $form;
+
+}
+
+/**
+ * Submit handler for the githubapi_hook_remove() form.
+ */
+function githubapi_hook_remove_submit($form, &$form_state) {
+  backdrop_set_message('<pre>' . print_r($form_state). '</pre>');
+}
+
 function githubapi_hook(){
   $form['owner_repo_path'] = array(
     '#type' => 'textfield',

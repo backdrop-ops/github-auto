@@ -58,6 +58,18 @@ function githubapi_menu() {
     'file' => 'githubapi.admin.inc',
     'type' => MENU_LOCAL_TASK,
   );
+
+  $items['admin/config/system/githubapi/%/delete'] = array(
+    'title' => 'Remove hook',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('githubapi_hook_remove', 4),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer site configuration'),
+    'description' => 'Github API configuration.',
+    'file' => 'githubapi.pages.inc',
+    'type' => MENU_CALLBACK,
+  );
+
   
   $items['githubapi/register'] = array(
     'type' => MENU_CALLBACK,
