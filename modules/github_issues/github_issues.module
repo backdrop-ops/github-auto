@@ -33,6 +33,7 @@ function github_issues_githubapi_payload($event_name, $event){
       break;
     case 'pull_request':
       $message =  $event['data']->pull_request->body;
+      watchdog('issues',$event['data']->number . " " . $message , WATCHDOG_ERROR);
       preg_match_all($expr, $commit->message, $match);
       if(!empty($match[1])){
         foreach($match[1] as $issue){
@@ -50,7 +51,7 @@ function github_issues_githubapi_payload($event_name, $event){
 
 
 function _post_issue_message($number, $message, $repo) {
-  watchdog('issues',$sha . " " . $message . " " . print_r($repo,true), WATCHDOG_ERROR);
+  watchdog('issues',$number . " " . $message . " " . print_r($repo,true), WATCHDOG_ERROR);
   
   $githubapi = _initGithubApi($repo);
   
