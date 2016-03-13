@@ -34,7 +34,7 @@ function githubapi_repos(){
   }
   $output['form'] = backdrop_get_form('githubapi_hook');
   $header = array(t('Owner'), t('Repository'), t('Operations'));
-  
+
   $output['table'] = array(
     '#theme' => 'table__githubapi_repos',
     '#rows' => $rows,
@@ -50,7 +50,7 @@ function githubapi_hook_remove($form, &$form_state, $rid){
     ->condition('id', $rid)
     ->execute()
     ->fetchObject();
-  
+
   $hook = db_select('githubapi_hooks', 'gh')
     ->fields('gh')
     ->condition('rid', $rid)
@@ -81,7 +81,7 @@ function githubapi_hook_remove($form, &$form_state, $rid){
 function githubapi_hook_remove_submit($form, &$form_state) {
   $repo =  $form_state['repo'];
   $hook =  $form_state['hook'];
-  
+
   module_load_include('inc', 'githubapi', 'githubapi_class');
   $config = config('githubapi.settings');
   $token = $config->get('token');
@@ -91,22 +91,20 @@ function githubapi_hook_remove_submit($form, &$form_state) {
   $githubapi->setOwnerName($repo->owner);
   $githubapi->setRepoName($repo->name);
   $githubapi->setToken($token);
-  
+
   $answer = $githubapi->deleteHook($hook->hook_id);
-  backdrop_set_message('<pre>' . print_r($answer,true). '</pre>');
-  if(True){
+  if(empty($answer)){
     db_delete('githubapi_hooks')
       ->condition('rid', $repo->id)
       ->execute();
-  
+
     db_delete('githubapi_repositories')
       ->condition('id', $repo->id)
       ->execute();
-  
+
     backdrop_set_message(t('Hook deleted!'));
   }else{
     backdrop_set_message(t('We do not have permissions to remove hook!'), 'error');
-    backdrop_set_message('<pre>' . print_r($form_state,true). '</pre>');
   }
 }
 
@@ -144,7 +142,6 @@ function githubapi_hook_submit($form, &$form_state) {
   $githubapi->setToken($token);
 
   if($data = $githubapi->getRepo()){
-    backdrop_set_message('<pre>' . print_r($data,true). '</pre>');
     global $base_url;
     global $base_path;
 
