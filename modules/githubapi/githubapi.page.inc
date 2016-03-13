@@ -14,6 +14,7 @@ function githubapi_repos(){
     ->orderBy('id', 'DESC')
     ->execute()
     ->fetchAll();
+
   $rows = array();
   foreach ($repos as $repo) {
     $row = array();
