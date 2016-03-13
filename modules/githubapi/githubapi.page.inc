@@ -157,8 +157,6 @@ function githubapi_hook_submit($form, &$form_state) {
     $githubapi->reInitCurl();
     $hook = $githubapi->createHook($settings);
     if($hook){
-      backdrop_set_message('<pre>' . print_r($hook,true). '</pre>');
-
       $rid = db_insert('githubapi_repositories')
           ->fields(
             array(
@@ -182,8 +180,6 @@ function githubapi_hook_submit($form, &$form_state) {
           )
         )
         ->execute();
-      return $hook;
     }
-    return FALSE;
   }
 }
