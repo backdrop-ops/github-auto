@@ -32,9 +32,15 @@ function githubapi_repos(){
     );
     $rows[] = $row;
   }
-  $output = backdrop_get_form('githubapi_hook');
+  $output['form'] = backdrop_get_form('githubapi_hook');
   $header = array(t('Owner'), t('Repository'), t('Operations'));
-  $output .= theme('table', array('header' => $header, 'rows' => $rows));
+  
+  $output['table'] = array(
+    '#theme' => 'table__githubapi_repos',
+    '#rows' => $rows,
+    '#header' => $header,
+    '#empty' => t('No custom blocks have been created yet.'),
+  );
   return $output;
 }
 
