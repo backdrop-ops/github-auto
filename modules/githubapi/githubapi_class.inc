@@ -335,7 +335,7 @@ class GithubAPI
   public function createIssueComment($settings) {
     $settings[':owner'] = $this->owner_name;
     $settings[':repo'] = $this->repo_name;
-    return $this->postRequest('/repos/:owner/:repo/issues/:number/comments', $settings);
+    return $this->postRequest('repos/:owner/:repo/issues/:number/comments', $settings);
   }
 
 }
