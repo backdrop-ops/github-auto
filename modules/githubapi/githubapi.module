@@ -114,6 +114,10 @@ function gitlc_github_payload_process() {
       $sender = $event->sender;
       $repository = $event->repository;
       
+      if(isset($repository->owner->login)){
+        $repository->owner->name = $repository->owner->login;
+      }
+      
       $repo = db_select('githubapi_repositories', 'gr')
         ->fields('gr')
         ->condition('name', $repository->name)
