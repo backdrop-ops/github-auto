@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * This module provides github API integration.
+ *
+ * @author Gor Martsen <gor@me.com>
+ */
+
+ /**
+ * Implements hook_githubapi_payload().
+ */
+function github_issues_githubapi_payload($event_name, $event){
+  $expr = '/(?<!\S)#([0-9]*)/i';
+  
+  $repo = gitlc_github_rid_load($event->rid);
+  
+  if($event_name == 'push'){
+    foreach($event->data->commits as $commit){
+      $match = NULL;
+      $message = '';
+      preg_match_all($expr, $commit->message, $match);
+      if(!empty($match[1])){
+        foreach($match[1] as $issue){
+          $message .= 'itpatrol/test#' . $issue . " ";
+        }
+        
+        if(!empty($message)){
+          _post_message($commit->id, $message, $repo);
+        }
+      }
+    }
+  }
+  
+}
+
+function _post_message($sha, $message, $repo) {
+  module_load_include('inc', 'githubapi', 'githubapi_class');
+  $config = config('githubapi.settings');
+  $token = $config->get('token');
+
+  $githubapi = new GithubAPI();
+
+  $githubapi->setOwnerName($repo->owner);
+  $githubapi->setRepoName($repo->name);
+  $githubapi->setToken($token);
+  
+  $settings = array(
+    'sha' => $sha,
+    'body' => t('Link commit to mentioned issues: ') . $message,
+  );
+  $githubapi->createComment($settings);
+}

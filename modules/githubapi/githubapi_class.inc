@@ -306,6 +306,12 @@ class GithubAPI
     return $this->postRequest('repos/:owner/:repo/hooks', $settings);
   }
 
+  public function createComment($settings) {
+    $settings[':owner'] = $this->owner_name;
+    $settings[':repo'] = $this->repo_name;
+    return $this->postRequest('repos/:owner/:repo/commits/:sha/comments', $settings);
+  }
+
   public function deleteHook($id) {
     return $this->deleteRequest(
         'repos/:owner/:repo/hooks/:id', array(
