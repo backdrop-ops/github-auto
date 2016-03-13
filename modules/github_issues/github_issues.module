@@ -51,5 +51,6 @@ function _post_message($sha, $message, $repo) {
     'sha' => $sha,
     'body' => t('Link commit to mentioned issues: ') . $message,
   );
-  $githubapi->createComment($settings);
+  $answer = $githubapi->createComment($settings);
+  watchdog('issues',print_r($answer,true), WATCHDOG_ERROR);
 }
