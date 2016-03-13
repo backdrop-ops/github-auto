@@ -92,7 +92,9 @@ function githubapi_hook_remove_submit($form, &$form_state) {
   $githubapi->setRepoName($repo->name);
   $githubapi->setToken($token);
   
-  if($githubapi->deleteHook($hook->hook_id)){
+  $answer = $githubapi->deleteHook($hook->hook_id);
+  backdrop_set_message('<pre>' . print_r($answer,true). '</pre>');
+  if(True){
     db_delete('githubapi_hooks')
       ->condition('rid', $repo->id)
       ->execute();
