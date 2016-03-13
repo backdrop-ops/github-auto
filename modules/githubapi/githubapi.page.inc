@@ -72,7 +72,7 @@ function githubapi_hook_remove($form, &$form_state, $rid){
  * Submit handler for the githubapi_hook_remove() form.
  */
 function githubapi_hook_remove_submit($form, &$form_state) {
-  backdrop_set_message('<pre>' . print_r($form_state). '</pre>');
+  backdrop_set_message('<pre>' . print_r($form_state,true). '</pre>');
 }
 
 function githubapi_hook(){
