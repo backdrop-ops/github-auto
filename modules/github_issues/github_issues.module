@@ -34,7 +34,7 @@ function github_issues_githubapi_payload($event_name, $event){
     case 'pull_request':
       $message =  $event['data']->pull_request->body;
       watchdog('issues',$event['data']->number . " " . $message , WATCHDOG_ERROR);
-      preg_match_all($expr, $commit->message, $match);
+      preg_match_all($expr, $message, $match);
       if(!empty($match[1])){
         foreach($match[1] as $issue){
           $message .= 'itpatrol/test#' . $issue . " ";
