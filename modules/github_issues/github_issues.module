@@ -30,7 +30,7 @@ function github_issues_githubapi_payload($event_name, $event, $repo){
       break;
     case 'pull_request':
       $message = '';
-      preg_match_all($expr, $event['data']->pull_request->body, $match);
+      preg_match_all($expr, $event['data']->pull_request->title . ' ' . $event['data']->pull_request->body, $match);
       if(!empty($match[1])){
         foreach($match[1] as $issue){
           $message .= 'itpatrol/test#' . $issue . " ";
