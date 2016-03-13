@@ -12,10 +12,10 @@
 function github_issues_githubapi_payload($event_name, $event){
   $expr = '/(?<!\S)#([0-9]*)/i';
   
-  $repo = gitlc_github_rid_load($event->rid);
+  $repo = gitlc_github_rid_load($event['rid']);
   
   if($event_name == 'push'){
-    foreach($event->data->commits as $commit){
+    foreach($event['data']->commits as $commit){
       $match = NULL;
       $message = '';
       preg_match_all($expr, $commit->message, $match);
