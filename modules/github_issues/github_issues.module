@@ -48,7 +48,7 @@ function _post_message($sha, $message, $repo) {
   $githubapi->setToken($token);
   
   $settings = array(
-    'sha' => $sha,
+    ':sha' => $sha,
     'body' => t('Link commit to mentioned issues: ') . $message,
   );
   $answer = $githubapi->createComment($settings);
