@@ -9,7 +9,31 @@
  */
 
 function githubapi_repos(){
+  $repos = db_select('githubapi_repositories', 'gr')
+    ->fields('gr')
+    ->orderBy('id', 'DESC')
+    ->execute()
+    ->fetchAll();
+  $rows = array();
+  foreach ($repos as $repo) {
+    $row = array();
+    $row[] = array( 'data' => $repo->owner );
+    $row[] = array( 'data' => $repo->name );
+    $links['delete'] = array(
+      'title' => t('Delete'),
+      'href' => "admin/config/system/githubapi/" . $repo->rid . "/delete",
+    );
+    $row[] = array(
+      'data' => array(
+        '#type' => 'operations',
+        '#links' => $links,
+      ),
+    );
+    $rows[] = $row;
+  }
   $output = backdrop_get_form('githubapi_hook');
+  $header = array(t('Owner'), t('Repository'), t('Operations'));
+  $output .= theme('table', array('header' => $header, 'rows' => $rows));
   return $output;
 }
 
@@ -80,18 +104,16 @@ function githubapi_hook_submit($form, &$form_state) {
       
       db_insert('githubapi_hooks')
         ->fields(
-            array(
+          array(
             'rid' => $rid,
             'hook_id' => $hook->id,
             'child' => (int) ($hook->url === TRUE),
             'timestamp' => REQUEST_TIME,
-            )
+          )
         )
         ->execute();
       return $hook;
     }
     return FALSE;
-    
-    
   }
 }
