@@ -1,0 +1,7 @@
+code_style:
+  default: [codespell, drupal]
+deploy:
+  master:
+    server: github.backdrop.expert
+    username: backdrop
+    dir: /home/backdrop/domains/github.backdrop.expert/modules/github-auto
