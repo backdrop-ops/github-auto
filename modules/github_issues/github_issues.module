@@ -60,7 +60,7 @@ function _post_issue_message($number, $message, $repo) {
     'body' => t('Link PR to mentioned issues: ') . $message,
   );
   $answer = $githubapi->createIssueComment($settings);
-  watchdog('issues',print_r($answer,true), WATCHDOG_ERROR);
+  watchdog('issues',print_r($githubapi,true), WATCHDOG_ERROR);
 }
 
 
