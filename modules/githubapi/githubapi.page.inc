@@ -44,13 +44,13 @@ function githubapi_hook_remove($form, &$form_state, $rid){
     ->condition('id', $rid)
     ->execute()
     ->fetchObject();
-    
+
   if(empty($repo)){
     backdrop_goto('admin/config/system/githubapi/list');
   }
-    
+
   $form_state['repo'] = $repo;
-  
+
   $form['message'] = array(
     '#markup' => t('Are you sure want to delete this repo from this app?'),
   );
@@ -60,7 +60,6 @@ function githubapi_hook_remove($form, &$form_state, $rid){
   );
 
   return $form;
-
 }
 
 /**
@@ -107,7 +106,7 @@ function githubapi_hook_submit($form, &$form_state) {
     backdrop_set_message('<pre>' . print_r($data,true). '</pre>');
     global $base_url;
     global $base_path;
-    
+
     $settings = array(
       'name' => GITHUB_HOOK_NAME,
       'config' => (object) array(
@@ -121,7 +120,7 @@ function githubapi_hook_submit($form, &$form_state) {
     $hook = $githubapi->createHook($settings);
     if($hook){
       backdrop_set_message('<pre>' . print_r($hook,true). '</pre>');
-      
+
       $rid = db_insert('githubapi_repositories')
           ->fields(
             array(
@@ -134,7 +133,7 @@ function githubapi_hook_submit($form, &$form_state) {
             )
           )
           ->execute();
-      
+
       db_insert('githubapi_hooks')
         ->fields(
           array(
