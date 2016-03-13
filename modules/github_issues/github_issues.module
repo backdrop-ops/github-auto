@@ -32,9 +32,9 @@ function github_issues_githubapi_payload($event_name, $event){
       }
       break;
     case 'pull_request':
-      $message =  $event['data']->pull_request->body;
-      watchdog('issues',$event['data']->number . " " . $message , WATCHDOG_ERROR);
-      preg_match_all($expr, $message, $match);
+      $message = '';
+      watchdog('issues',$event['data']->number . " " . $event['data']->pull_request->body , WATCHDOG_ERROR);
+      preg_match_all($expr, $event['data']->pull_request->body, $match);
       if(!empty($match[1])){
         foreach($match[1] as $issue){
           $message .= 'itpatrol/test#' . $issue . " ";
@@ -59,7 +59,7 @@ function _post_issue_message($number, $message, $repo) {
     ':number' => $number,
     'body' => t('Link PR to mentioned issues: ') . $message,
   );
-  $answer = $githubapi->createPRComment($settings);
+  $answer = $githubapi->createIssueComment($settings);
   watchdog('issues',print_r($answer,true), WATCHDOG_ERROR);
 }
 
