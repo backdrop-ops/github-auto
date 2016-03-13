@@ -15,6 +15,7 @@ function github_issues_githubapi_payload($event_name, $event){
   $repo = gitlc_github_rid_load($event['rid']);
   
   if($event_name == 'push'){
+    watchdog('issues',print_r($event,true), WATCHDOG_ERROR);
     foreach($event['data']->commits as $commit){
       $match = NULL;
       $message = '';
@@ -34,6 +35,8 @@ function github_issues_githubapi_payload($event_name, $event){
 }
 
 function _post_message($sha, $message, $repo) {
+  watchdog('issues',$sha . " " . $message . " " . print_r($repo,true), WATCHDOG_ERROR);
+  
   module_load_include('inc', 'githubapi', 'githubapi_class');
   $config = config('githubapi.settings');
   $token = $config->get('token');
