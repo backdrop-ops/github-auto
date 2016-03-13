@@ -143,11 +143,12 @@ function githubapi_payload_process() {
 }
 
 function githubapi_get_class($repo){
+  module_load_include('inc', 'githubapi', 'githubapi_class');
+
   $config = config('githubapi.settings');
   $token = $config->get('token');
 
   $githubapi = new GithubAPI();
-
   $githubapi->setOwnerName($repo->owner);
   $githubapi->setRepoName($repo->name);
   $githubapi->setToken($token);
