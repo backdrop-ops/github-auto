@@ -1,5 +1,3 @@
-code_style:
-  default: [codespell, drupal]
 deploy:
   master:
     server: github.backdrop.expert
