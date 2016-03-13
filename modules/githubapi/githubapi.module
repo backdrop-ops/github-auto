@@ -66,7 +66,7 @@ function githubapi_menu() {
     'access callback' => 'user_access',
     'access arguments' => array('administer site configuration'),
     'description' => 'Github API configuration.',
-    'file' => 'githubapi.pages.inc',
+    'file' => 'githubapi.page.inc',
     'type' => MENU_CALLBACK,
   );
 
