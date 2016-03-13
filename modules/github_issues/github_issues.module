@@ -9,11 +9,9 @@
  /**
  * Implements hook_githubapi_payload().
  */
-function github_issues_githubapi_payload($event_name, $event){
+function github_issues_githubapi_payload($event_name, $event, $repo){
   $expr = '/(?<!\S)#([0-9]*)/i';
-  
-  $repo = gitlc_github_rid_load($event['rid']);
-  
+
   switch ($event_name) {
     case 'push':
       foreach($event['data']->commits as $commit){
@@ -24,68 +22,43 @@ function github_issues_githubapi_payload($event_name, $event){
           foreach($match[1] as $issue){
             $message .= 'itpatrol/test#' . $issue . " ";
           }
-          
           if(!empty($message)){
-            _post_message($commit->id, $message, $repo);
+            github_issues_commit_comment_add($commit->id, $message, $repo);
           }
         }
       }
       break;
     case 'pull_request':
       $message = '';
-      watchdog('issues',$event['data']->number . " " . $event['data']->pull_request->body , WATCHDOG_ERROR);
       preg_match_all($expr, $event['data']->pull_request->body, $match);
       if(!empty($match[1])){
         foreach($match[1] as $issue){
           $message .= 'itpatrol/test#' . $issue . " ";
         }
-        
+
         if(!empty($message)){
-          _post_issue_message($event['data']->number, $message, $repo);
+          github_issues_issue_comment_add($event['data']->number, $message, $repo);
         }
       }
       break;
   }
 }
 
-
-
-function _post_issue_message($number, $message, $repo) {
-  watchdog('issues',$number . " " . $message . " " . print_r($repo,true), WATCHDOG_ERROR);
-  
-  $githubapi = _initGithubApi($repo);
-  
+function github_issues_issue_comment_add($number, $message, $repo) {
+  $githubapi = githubapi_get_class($repo);
   $settings = array(
     ':number' => $number,
     'body' => t('Link PR to mentioned issues: ') . $message,
   );
-  $answer = $githubapi->createIssueComment($settings);
-  watchdog('issues',print_r($githubapi,true), WATCHDOG_ERROR);
+  $githubapi->createIssueComment($settings);
 }
 
 
-function _post_message($sha, $message, $repo) {
-  watchdog('issues',$sha . " " . $message . " " . print_r($repo,true), WATCHDOG_ERROR);
-  
-  $githubapi = _initGithubApi($repo);
-  
+function github_issues_commit_comment_add($sha, $message, $repo) {
+  $githubapi = githubapi_get_class($repo);
   $settings = array(
     ':sha' => $sha,
     'body' => t('Link commit to mentioned issues: ') . $message,
   );
-  $answer = $githubapi->createComment($settings);
-  watchdog('issues',print_r($answer,true), WATCHDOG_ERROR);
-}
-
-function _initGithubApi($repo){
-  module_load_include('inc', 'githubapi', 'githubapi_class');
-  $config = config('githubapi.settings');
-  $token = $config->get('token');
-
-  $githubapi = new GithubAPI();
-
-  $githubapi->setOwnerName($repo->owner);
-  $githubapi->setRepoName($repo->name);
-  $githubapi->setToken($token);
-  return $githubapi;
+  $githubapi->createComment($settings);
 }

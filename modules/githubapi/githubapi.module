@@ -82,7 +82,7 @@ function githubapi_menu() {
   $items['githubapi/payload'] = array(
     'type' => MENU_CALLBACK,
     'title' => 'Payload callback',
-    'page callback' => 'gitlc_github_payload_process',
+    'page callback' => 'githubapi_payload_process',
     'access callback' => TRUE,
   );
 
@@ -100,7 +100,7 @@ function gitlc_github_rid_load($rid){
 /**
  * Implements https://developer.github.com/webhooks/#payloads.
  */
-function gitlc_github_payload_process() {
+function githubapi_payload_process() {
   if (isset($_SERVER['HTTP_X_GITHUB_EVENT'])) {
     $received_json = file_get_contents('php://input', TRUE);
 
@@ -137,7 +137,19 @@ function gitlc_github_payload_process() {
       );
       backdrop_write_record('githubapi_payload', $record);
 
-      module_invoke_all('githubapi_payload', $event_name, $record);
+      module_invoke_all('githubapi_payload', $event_name, $record, $repo);
     }
   }
+}
+
+function githubapi_get_class($repo){
+  $config = config('githubapi.settings');
+  $token = $config->get('token');
+
+  $githubapi = new GithubAPI();
+
+  $githubapi->setOwnerName($repo->owner);
+  $githubapi->setRepoName($repo->name);
+  $githubapi->setToken($token);
+  return $githubapi;
 }
