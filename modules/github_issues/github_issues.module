@@ -31,7 +31,7 @@ function github_issues_githubapi_payload($event_name, $event, $repo){
       }
       break;
     case 'pull_request':
-      if($event->action == 'opened'){
+      if($event['data']->action == 'opened'){
         $message = '';
         preg_match_all($expr, $event['data']->pull_request->title . ' ' . $event['data']->pull_request->body, $match);
         if(!empty($match[1])){
