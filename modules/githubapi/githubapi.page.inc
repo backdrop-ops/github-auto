@@ -21,7 +21,7 @@ function githubapi_repos(){
     $row[] = array( 'data' => $repo->name );
     $links['delete'] = array(
       'title' => t('Delete'),
-      'href' => "admin/config/system/githubapi/" . $repo->rid . "/delete",
+      'href' => "admin/config/system/githubapi/" . $repo->id . "/delete",
     );
     $row[] = array(
       'data' => array(
