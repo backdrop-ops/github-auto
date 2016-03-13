@@ -45,11 +45,7 @@ function githubapi_repos(){
 }
 
 function githubapi_hook_remove($form, &$form_state, $rid){
-  $repo = db_select('githubapi_repositories', 'gr')
-    ->fields('gr')
-    ->condition('id', $rid)
-    ->execute()
-    ->fetchObject();
+  $repo = gitlc_github_rid_load($rid);
 
   $hook = db_select('githubapi_hooks', 'gh')
     ->fields('gh')

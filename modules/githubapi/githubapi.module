@@ -89,6 +89,14 @@ function githubapi_menu() {
   return $items;
 }
 
+function gitlc_github_rid_load($rid){
+  return db_select('githubapi_repositories', 'gr')
+    ->fields('gr')
+    ->condition('id', $rid)
+    ->execute()
+    ->fetchObject();
+}
+
 /**
  * Implements https://developer.github.com/webhooks/#payloads.
  */
@@ -105,13 +113,21 @@ function gitlc_github_payload_process() {
     if ($event_name) {
       $sender = $event->sender;
       $repository = $event->repository;
+      
+      $repo = db_select('githubapi_repositories', 'gr')
+        ->fields('gr')
+        ->condition('name', $repository->name)
+        ->condition('owner', $repository->owner->name)
+        ->execute()
+        ->fetchObject();
+    
       unset($event->repository);
       unset($event->sender);
 
       $record = array(
         'type' => $event_name,
         'sender' => $sender,
-        'repository' => $repository,
+        'rid' => $repo->id,
         'data' => $event,
         'timestamp' => REQUEST_TIME,
       );
