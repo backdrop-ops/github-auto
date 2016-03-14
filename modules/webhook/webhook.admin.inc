@@ -17,6 +17,12 @@ function webhook_admin_settings($form, &$form_state) {
     '#default_value' => $config->get('token'),
     '#description' => t('You can obtain it on repo setting page on http://git.lc website')
   );
+  $form['actions']['#type'] = 'actions';
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
+  );
+  return $form;
 }
 
 /**
