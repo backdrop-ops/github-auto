@@ -80,8 +80,8 @@ function qa_webhook($method, $data){
 }
 
 function qa_get_value($env_vars, $variable){
-  if(isset($env_vars['$variable'])){
-    return $env_vars['$variable'];
+  if(isset($env_vars[$variable])){
+    return $env_vars[$variable];
   }else{
     $answer = new stdClass();
     $answer->error = TRUE;
