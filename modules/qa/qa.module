@@ -54,7 +54,7 @@ function qa_webhook($method, $data){
         
         $suffix = $data['branch'];
         if($data['pull_request']){
-          $suffix = $data['pull_request'];
+          $suffix = 'pr' . $data['pull_request'];
         }
         
         $database_user = str_replace(array('%','.','?'), '', $suffix);
@@ -88,16 +88,22 @@ function qa_webhook($method, $data){
         if(is_object($domain)){
           return $domain;
         }
-        qa_del_domain($username, $domain);
         
         $suffix = $data['branch'];
         if($data['pull_request']){
-          $suffix = $data['pull_request'];
+          $suffix = 'pr' . $data['pull_request'];
         }
 
         $database_user = str_replace(array('%','.','?'), '', $suffix);
         $database_name = str_replace(array('%','.','?'), '', $suffix);
         
+        //Init RP
+        rp_api_init_robin_panel();
+        
+        $config = config('rp_api.settings');
+        $username = $config->get('username');
+        
+        qa_del_domain($username, $domain);
         qa_del_db($username, $database_name);
         qa_del_dbuser($username, $database_user);
         
