@@ -46,19 +46,19 @@ function qa_webhook($method, $data){
     case 'init':
         // We need to create domain, database user, database db, delegate udb user to db.
         // Let's check all nessary variables
-        $domain = qa_get_value($data->config->env_vars, 'domain');
+        $domain = qa_get_value($data['config']['env_vars'], 'domain');
         if(is_object($domain)){
           return $domain;
         }
         
-        $database_user = $data->branch;
-        $data->config->env_vars->database_user = $data->config->username . '_' . $database_user;
+        $database_user = $data['branch'];
+        $data['config']['env_vars']['database_user']= $data['config']['username']. '_' . $database_user;
 
         $database_name = $data->branch;
-        $data->config->env_vars->database_name = $data->config->username . '_' . $database_name;
+        $data['config']['env_vars']['database_name']= $data['config']['username']. '_' . $database_name;
         
         $database_password = user_password(8);
-        $data->config->env_vars->database_password = $database_password;
+        $data['config']['env_vars']['database_password']= $database_password;
         //Init RP
         rp_api_init_robin_panel();
         
@@ -80,8 +80,8 @@ function qa_webhook($method, $data){
 }
 
 function qa_get_value($env_vars, $variable){
-  if(isset($env_vars->$variable)){
-    return $env_vars->$variable;
+  if(isset($env_vars['$variable'])){
+    return $env_vars['$variable'];
   }else{
     $answer = new stdClass();
     $answer->error = TRUE;
