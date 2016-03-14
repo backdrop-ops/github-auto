@@ -1,0 +1,120 @@
+<?php
+/**
+ * @file
+ * Webhook.
+ *
+ * React on webhook calls.
+ */
+
+/**
+ * Implements hook_config_info().
+ */
+function webhook_config_info() {
+  $prefixes['webhook.settings'] = array(
+    'label' => t('Webhook settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}
+
+
+/**
+ * Implements hook_menu().
+ */
+function webhook_menu() {
+  $items = array();
+
+  // Admin settings page.
+  $items['admin/config/system/webhook'] = array(
+    'title' => 'Webhook settings',
+    'description' => 'Webhook settings to integrate with GitLC.',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('webhook_admin_settings'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'webhook.admin.inc',
+  );
+
+  $items['webhook/%'] = array(
+    'type' => MENU_CALLBACK,
+    'title' => 'Webhook',
+    'page callback' => 'webhook_ajax',
+    'access callback' => 'webhook_access',
+    'page arguments' => array(1),
+    'delivery callback' => 'webhook_ajax_deliver',
+  );
+
+  return $items;
+}
+
+function webhook_ajax($method){
+  $received_json = file_get_contents("php://input",  TRUE);
+  $json = backdrop_json_decode($received_json, TRUE);
+  
+  $answer = array();
+  switch($method){
+    case 'before':
+      $answer['env_vars']['test'] = 100;
+    break;
+    case 'after':
+      $answer['env_vars']['test'] = 1000;
+    break;
+  }
+
+  return $answer;
+}
+
+/**
+ * Check token to be valid
+ *
+ * @return bool
+ *   Boolean TRUE if the current user has the requested permission.
+ */
+function webhook_access(){
+  $headers = apache_request_headers();
+  $config = config('webhook.settings');
+  $token = $config->get('token');
+  
+  $header_token = '';
+  if(isset($headers['token'])){
+    $header_token = $headers['token'];
+  }
+  if(isset($headers['Token'])){
+    $header_token = $headers['Token'];
+  }
+  if(0 == strcmp($token, $header_token)){
+    return TRUE;
+  }
+  return FALSE;
+}
+
+function webhook_ajax_deliver($page_callback_result){
+  backdrop_add_http_header('Content-Type', 'application/json; charset=utf-8');
+
+  if (is_int($page_callback_result)) {
+    $json = array('error' => true);
+    switch ($page_callback_result) {
+      case MENU_NOT_FOUND:
+        $json['message'] = t('The requested page could not be found.');
+        backdrop_add_http_header('Status', '404 Not Found');
+        break;
+
+      case MENU_ACCESS_DENIED:
+        $json['message'] = t('You are not authorized to access this page.');
+        backdrop_add_http_header('Status', '403 Forbidden');
+        break;
+
+      case MENU_SITE_OFFLINE:
+        $json['message'] = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'backdrop')));
+        backdrop_add_http_header('Status', '503 Service unavailable');
+        break;
+    }
+
+  }elseif(is_array($page_callback_result) ){
+    $json = $page_callback_result;
+  }
+  print backdrop_json_encode($json);
+  if (backdrop_get_bootstrap_phase() == BACKDROP_BOOTSTRAP_FULL && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update')) {
+    module_invoke_all('exit');
+  }
+}

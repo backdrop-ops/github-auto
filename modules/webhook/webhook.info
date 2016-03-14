@@ -1,0 +1,7 @@
+name = Webhook
+description = Webhook module for git.lc integration.
+backdrop = 1.x
+version = 1.x-1.0
+package = API
+configure = admin/config/system/webhook
+type = module
