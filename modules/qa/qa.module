@@ -54,7 +54,7 @@ function qa_webhook($method, $data){
         $database_user = $data['branch'];
         $data['config']['env_vars']['database_user']= $data['config']['username']. '_' . $database_user;
 
-        $database_name = $data->branch;
+        $database_name = $data['branch'];
         $data['config']['env_vars']['database_name']= $data['config']['username']. '_' . $database_name;
         
         $database_password = user_password(8);
