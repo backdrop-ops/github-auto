@@ -51,14 +51,16 @@ function qa_webhook($method, $data){
           return $domain;
         }
         
+        $answer['env_vars'] = array();
+        
         $database_user = $data['branch'];
-        $data['config']['env_vars']['database_user']= $data['config']['username']. '_' . $database_user;
+        $answer['env_vars']['database_user']= $data['config']['username']. '_' . $database_user;
 
         $database_name = $data['branch'];
-        $data['config']['env_vars']['database_name']= $data['config']['username']. '_' . $database_name;
+        $answer['env_vars']['database_name']= $data['config']['username']. '_' . $database_name;
         
         $database_password = user_password(8);
-        $data['config']['env_vars']['database_password']= $database_password;
+        $answer['env_vars']['database_password']= $database_password;
         //Init RP
         rp_api_init_robin_panel();
         
@@ -73,6 +75,8 @@ function qa_webhook($method, $data){
         
         //Add User and Grant it
         qa_add_user($username, $database_user,$database_name, $database_password);
+        
+        return $answer;
       break;
     
   }
