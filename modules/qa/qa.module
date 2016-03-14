@@ -85,7 +85,8 @@ function qa_get_value($env_vars, $variable){
   }else{
     $answer = new stdClass();
     $answer->error = TRUE;
-    $answer->message = t('Please set env_vars:!variable', array('!vaariable' => $variable));
+    $answer->message = t('Please set env_vars:!variable', array('!variable' => $variable));
+    $answer->env_vars = $env_vars;
     return $answer;
   }
 }
