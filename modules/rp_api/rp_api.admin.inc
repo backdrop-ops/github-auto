@@ -49,5 +49,12 @@ function rp_api_settings_submit($form, &$form_state) {
   $config->set('username', $form_state['values']['username']);
   $config->set('password', $form_state['values']['password']);
   $config->save();
-  backdrop_set_message(t('The configuration options have been saved.'));
+  
+  rp_api_init_robin_panel();
+  $cache = rp_api_execute_command('ShowUserInfo', array('user' => $this->robin_account->login));
+  if(FALSE == $cache){
+    backdrop_set_message(t('Credentials is not correct !error', array('!error' => rp_api_error_message())), 'error');
+  }else{
+    backdrop_set_message(t('The configuration options have been saved.'));
+  }
 }

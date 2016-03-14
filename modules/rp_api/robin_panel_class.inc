@@ -100,10 +100,10 @@ class RobinPanel {
     $data_line = $this->createXML($data_arr);
 
     if ($this->debug) {
-	  $log_file = '/tmp/rp.log';
-	  if(isset($this->logfile) && !empty($this->logfile)){
-		$log_file = $this->logfile;	
-	  }
+	    $log_file = '/tmp/rp.log';
+	    if(isset($this->logfile) && !empty($this->logfile)){
+		    $log_file = $this->logfile;	
+	    }
       $handle = fopen($log_file, 'a');
       $error_message = "[$command]\n";
       $error_message .= print_r($data_arr, TRUE);
