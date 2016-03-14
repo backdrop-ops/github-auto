@@ -106,7 +106,7 @@ function qa_add_domain($user, $domain){
     'accesslog' => TRUE,
     'errorlog' => TRUE,
     'wildcard' => FALSE,
-    'strict' => TRUE,
+    'strict' => FALSE,
     'ssl' => FALSE,
   );
   rp_api_execute_command('AddDomain', $settings);
