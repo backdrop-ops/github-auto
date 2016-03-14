@@ -51,7 +51,7 @@ function rp_api_settings_submit($form, &$form_state) {
   $config->save();
   
   rp_api_init_robin_panel();
-  $cache = rp_api_execute_command('ShowUserInfo', array('user' => $this->robin_account->login));
+  $cache = rp_api_execute_command('ShowUserInfo', array('user' => $form_state['values']['username']));
   if(FALSE == $cache){
     backdrop_set_message(t('Credentials is not correct !error', array('!error' => rp_api_error_message())), 'error');
   }else{
