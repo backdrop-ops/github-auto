@@ -1,0 +1,46 @@
+<?php
+/**
+ * @file
+ * RP API.
+ *
+ * Working with backdrop/backdrop to delivery websites
+ */
+
+/**
+ * Implements hook_config_info().
+ */
+function qa_config_info() {
+  $prefixes['qa.settings'] = array(
+    'label' => t('QA settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}
+
+
+/**
+ * Implements hook_menu().
+ */
+function qa_menu() {
+  $items = array();
+
+  $items['admin/config/system/qa'] = array(
+    'title' => 'QA settings',
+    'description' => 'QA settings.',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('qa_settings'),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer site configuration'),
+    'file' => 'qa.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_webhook().
+ */
+function qa_webhook($method, $data){
+  return $data;
+}
