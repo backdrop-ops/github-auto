@@ -8,7 +8,7 @@
  define('GITHUB_ISSUES_ISSUES_REPO', 'backdrop/backdrop-issues');
  define('GITHUB_ISSUES_CODE_REPO', 'backdrop/backdrop');
 
- /**
+/**
  * Implements hook_githubapi_payload().
  */
 function github_issues_githubapi_payload($event_name, $event, $repo){
