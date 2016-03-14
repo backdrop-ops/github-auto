@@ -17,7 +17,7 @@ define('GITHUB_HOOK_NAME', 'web');
 define('GITHUB_PAYLOAD_PATH', 'githubapi/payload');
 define('GITHUB_PAYLOAD_CONTENT_TYPE', 'json');
 
- /**
+/**
  * Implements hook_config_info().
  */
 function githubapi_config_info() {
