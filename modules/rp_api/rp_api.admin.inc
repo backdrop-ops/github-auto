@@ -7,7 +7,7 @@
  /**
  * Menu callback for admin/config/system/githubapi/settings.
  */
-function githubapi_admin_settings() {
+function rp_api_settings() {
   $config = config('rp_api.settings');
   $form['server'] = array(
     '#type' => 'textfield',
@@ -40,9 +40,9 @@ function githubapi_admin_settings() {
 }
 
 /**
- * Submit handler for the githubapi_admin_settings() form.
+ * Submit handler for the rp_api_settings() form.
  */
-function githubapi_admin_settings_submit($form, &$form_state) {
+function rp_api_settings_submit($form, &$form_state) {
 
   $config = config('rp_api.settings');
   $config->set('server', $form_state['values']['server']);

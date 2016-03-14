@@ -27,7 +27,7 @@ function rp_api_menu() {
   $items['admin/config/system/rp_api'] = array(
     'title' => 'RP API settings',
     'description' => 'RP API settings.',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('rp_api_settings'),
     'access callback' => 'user_access',
     'access arguments' => array('administer site configuration'),
@@ -163,7 +163,7 @@ function rp_api_execute_command($command, $settings) {
             'changed' => REQUEST_TIME,
           );
           
-          drupal_write_record('rp_api_accounts', $account);
+          backdrop_write_record('rp_api_accounts', $account);
           $rp->aid = $account['aid'];
         }
         break;
