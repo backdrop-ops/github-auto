@@ -9,7 +9,7 @@
 /**
  * Implements hook_config_info().
  */
-function githubapi_config_info() {
+function rp_api_config_info() {
   $prefixes['rp_api.settings'] = array(
     'label' => t('RP API settings'),
     'group' => t('Configuration'),
