@@ -49,17 +49,9 @@ function webhook_menu() {
 
 function webhook_ajax($method){
   $received_json = file_get_contents("php://input",  TRUE);
-  $json = backdrop_json_decode($received_json, TRUE);
+  $data = backdrop_json_decode($received_json, TRUE);
   
-  $answer = array();
-  switch($method){
-    case 'before':
-      $answer['env_vars']['test'] = 100;
-    break;
-    case 'after':
-      $answer['env_vars']['test'] = 1000;
-    break;
-  }
+  $answer = module_invoke_all('webhook', $method, $data);
 
   return $answer;
 }
