@@ -42,7 +42,7 @@ function webhook_menu() {
   $items['admin/config/system/webhook/settings'] = array(
     'title' => 'Webhook settings',
     'description' => 'Webhook settings to integrate with GitLC.',
-    'page callback' => 'webhook_admin_list',
+    'page callback' => 'webhook_admin_settings',
     'access arguments' => array('administer site configuration'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'webhook.admin.inc',
