@@ -5,6 +5,17 @@
  *
  * React on webhook calls.
  */
+ 
+/**
+ * Implements hook_config_info().
+ */
+function webhook_config_info() {
+  $prefixes['webhook.settings'] = array(
+    'label' => t('Webhook settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}
 
 /**
  * Implements hook_menu().
@@ -12,8 +23,23 @@
 function webhook_menu() {
   $items = array();
 
-  // Admin settings page.
   $items['admin/config/system/webhook'] = array(
+    'title' => 'Webhook settings',
+    'description' => 'Webhook settings to integrate with GitLC.',    
+    'page callback' => 'webhook_admin_list',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer site configuration'),
+    'file' => 'webhook.page.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  
+  $items['admin/config/system/webhook/list'] = array(
+    'title' => 'Repos list',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  
+  // Admin settings page.
+  $items['admin/config/system/webhook/settings'] = array(
     'title' => 'Webhook settings',
     'description' => 'Webhook settings to integrate with GitLC.',
     'page callback' => 'webhook_admin_list',

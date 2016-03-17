@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @file
- * Administer settings for webhook
- */
-
-
 function webhook_admin_list(){
   $repos = db_select('webhook_repositories', 'wr')
     ->fields('wr')
@@ -63,4 +57,5 @@ function webhook_hook(){
  * Submit handler for the githubapi_hook() form.
  */
 function webhook_hook_submit($form, &$form_state) {
+  
 }
