@@ -6,31 +6,61 @@
  */
 
 
-/**
- * Adding a module settings to work with Github.
- */
-function webhook_admin_settings($form, &$form_state) {
-  $config = config('webhook.settings');
-  $form['token'] = array(
+function webhook_admin_list(){
+  $repos = db_select('webhook_repositories', 'wr')
+    ->fields('wr')
+    ->orderBy('owner', 'DESC')
+    ->orderBy('repo', 'DESC')
+    ->execute()
+    ->fetchAll();
+
+  $rows = array();
+  foreach ($repos as $repo) {
+    $row = array();
+    $row[] = array( 'data' => $repo->owner );
+    $row[] = array( 'data' => $repo->repo );
+    $links['delete'] = array(
+      'title' => t('Delete'),
+      'href' => "admin/config/system/webhook/" . $repo->id . "/delete",
+    );
+    $row[] = array(
+      'data' => array(
+        '#type' => 'operations',
+        '#links' => $links,
+      ),
+    );
+    $rows[] = $row;
+  }
+  $output['form'] = backdrop_get_form('webhook_hook');
+  $header = array(t('Owner'), t('Repository'), t('Operations'));
+
+  $output['table'] = array(
+    '#theme' => 'table__webhook_repos',
+    '#rows' => $rows,
+    '#header' => $header,
+    '#empty' => t('No API integration with GitLC for repositories yet.'),
+  );
+  return $output;
+}
+
+function webhook_hook(){
+  $form['owner_repo_path'] = array(
     '#type' => 'textfield',
-    '#title' => t('Webhook token'),
-    '#default_value' => $config->get('token'),
-    '#description' => t('You can obtain it on repo setting page on http://git.lc website')
+    '#title' => t('Please provide owner/repo'),
+    '#description' => t('Please put in format owner/repo.'),
   );
   $form['actions']['#type'] = 'actions';
   $form['actions']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Save configuration'),
+    '#value' => t('Hook repo'),
   );
+
   return $form;
+
 }
 
 /**
- * Submit handler for the webhook_admin_settings() form.
+ * Submit handler for the githubapi_hook() form.
  */
-function webhook_admin_settings_submit($form, &$form_state) {
-  $config = config('webhook.settings');
-  $config->set('token', $form_state['values']['token']);
-  $config->save();
-  backdrop_set_message(t('The configuration options have been saved.'));
+function webhook_hook_submit($form, &$form_state) {
 }

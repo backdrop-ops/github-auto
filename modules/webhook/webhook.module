@@ -7,18 +7,6 @@
  */
 
 /**
- * Implements hook_config_info().
- */
-function webhook_config_info() {
-  $prefixes['webhook.settings'] = array(
-    'label' => t('Webhook settings'),
-    'group' => t('Configuration'),
-  );
-  return $prefixes;
-}
-
-
-/**
  * Implements hook_menu().
  */
 function webhook_menu() {
@@ -28,8 +16,7 @@ function webhook_menu() {
   $items['admin/config/system/webhook'] = array(
     'title' => 'Webhook settings',
     'description' => 'Webhook settings to integrate with GitLC.',
-    'page callback' => 'backdrop_get_form',
-    'page arguments' => array('webhook_admin_settings'),
+    'page callback' => 'webhook_admin_list',
     'access arguments' => array('administer site configuration'),
     'type' => MENU_NORMAL_ITEM,
     'file' => 'webhook.admin.inc',
