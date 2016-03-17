@@ -39,7 +39,7 @@ function githubapi_repos(){
     '#theme' => 'table__githubapi_repos',
     '#rows' => $rows,
     '#header' => $header,
-    '#empty' => t('No custom blocks have been created yet.'),
+    '#empty' => t('No github repo hooked yet.'),
   );
   return $output;
 }
