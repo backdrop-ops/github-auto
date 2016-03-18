@@ -109,9 +109,15 @@ function githubapi_schema() {
         'not null' => TRUE,
         'unsigned' => TRUE,
       ),
+      'secret' => array(
+        'description' => 'Secret key for webhook.',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),      
     ),
     'indexes' => array(
       'owner_name' => array('owner', 'name'),
+      'secret' => array('secret'),      
     ),
 
     'unique keys' => array(
@@ -174,4 +180,13 @@ function githubapi_update_1001() {
   db_drop_field('githubapi_payload', 'repository');
 
   db_add_index('githubapi_payload', 'rid', array('rid'));
+}
+
+/**
+ * Add secret fields to repository.
+ */
+function githubapi_update_1002() {
+  $schema = backdrop_get_schema_unprocessed('githubapi');
+  db_add_field('githubapi_repositories', 'secret', $schema['githubapi_repositories']['fields']['secret']);
+  db_add_index('githubapi_repositories', 'secret', array('secret'));
 }

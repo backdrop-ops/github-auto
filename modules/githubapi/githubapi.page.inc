@@ -107,8 +107,8 @@ function githubapi_hook_remove_submit($form, &$form_state) {
 function githubapi_hook(){
   $form['owner_repo_path'] = array(
     '#type' => 'textfield',
-    '#title' => t('Please provide owner/repo'),
-    '#description' => t('Please put in format owner/repo.'),
+    '#title' => t('Please provide owner or owner/repo'),
+    '#description' => t('Please provide owner or owner/repo to install webhook.'),
   );
   $form['actions']['#type'] = 'actions';
   $form['actions']['submit'] = array(
@@ -125,57 +125,71 @@ function githubapi_hook(){
  */
 function githubapi_hook_submit($form, &$form_state) {
 
-  $owner_repo = explode("/", $form_state['values']['owner_repo_path']);
-
   module_load_include('inc', 'githubapi', 'githubapi_class');
   $config = config('githubapi.settings');
   $token = $config->get('token');
 
   $githubapi = new GithubAPI();
-
-  $githubapi->setOwnerName($owner_repo[0]);
-  $githubapi->setRepoName($owner_repo[1]);
   $githubapi->setToken($token);
 
-  if($data = $githubapi->getRepo()){
-    global $base_url;
-    global $base_path;
+  global $base_url;
+  global $base_path;
+  
+  $hook = FALSE;
+  $secret = '';
+  
+  
+  if(strpos('/', $form_state['values']['owner_repo_path'])){
+    // Hook a repo.
+    $owner_repo = explode("/", $form_state['values']['owner_repo_path']);
+    $githubapi->setOwnerName($owner_repo[0]);
+    $githubapi->setRepoName($owner_repo[1]);
+    
+    if($data = $githubapi->getRepo()){
+      // Make sure we do have access to repo.
+      $secret = backdrop_random_key();
+      $settings = array(
+        'name' => GITHUB_HOOK_NAME,
+        'config' => (object) array(
+            'url' => $base_url . $base_path . GITHUB_PAYLOAD_PATH,
+            'content_type' => GITHUB_PAYLOAD_CONTENT_TYPE,
+            'secret' => $secret,
+          ),
+        'events' => array ('push', 'pull_request', 'create', 'delete', 'release', 'issues', 'issue_comment', 'follow', 'fork', 'status' , 'commit_comment', 'pull_request_review_comment' ),
+        'active' => true,
+      );
+      $githubapi->reInitCurl();
+      $hook = $githubapi->createHook($settings);
+    }
+  }else{
+    // Hook an user or organisation.
+    $githubapi->setOwnerName($form_state['values']['owner_repo_path']);
+  }
 
-    $settings = array(
-      'name' => GITHUB_HOOK_NAME,
-      'config' => (object) array(
-          'url' => $base_url . $base_path . GITHUB_PAYLOAD_PATH,
-          'content_type' => GITHUB_PAYLOAD_CONTENT_TYPE,
-        ),
-      'events' => array ('push', 'pull_request', 'create', 'delete', 'release', 'issues', 'issue_comment', 'follow', 'fork', 'status' , 'commit_comment', 'pull_request_review_comment' ),
-      'active' => true,
-    );
-    $githubapi->reInitCurl();
-    $hook = $githubapi->createHook($settings);
-    if($hook){
-      $rid = db_insert('githubapi_repositories')
-          ->fields(
-            array(
-              'repo_id' => $data->id,
-              'owner' => $data->owner->login,
-              'name' => $data->name,
-              'private' => (int) $data->private,
-              'cache' => serialize($data),
-              'timestamp' => REQUEST_TIME,
-            )
-          )
-          ->execute();
 
-      db_insert('githubapi_hooks')
+  if($hook){
+    $rid = db_insert('githubapi_repositories')
         ->fields(
           array(
-            'rid' => $rid,
-            'hook_id' => $hook->id,
-            'child' => (int) ($hook->url === TRUE),
+            'repo_id' => $data->id,
+            'owner' => $data->owner->login,
+            'name' => $data->name,
+            'private' => (int) $data->private,
+            'cache' => serialize($data),
             'timestamp' => REQUEST_TIME,
           )
         )
         ->execute();
-    }
+
+    db_insert('githubapi_hooks')
+      ->fields(
+        array(
+          'rid' => $rid,
+          'hook_id' => $hook->id,
+          'child' => (int) ($hook->url === TRUE),
+          'timestamp' => REQUEST_TIME,
+        )
+      )
+      ->execute();
   }
 }
