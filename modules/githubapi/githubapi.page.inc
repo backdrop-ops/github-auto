@@ -208,7 +208,7 @@ function githubapi_hook_submit($form, &$form_state) {
             'owner' => $data->owner->login,
             'name' => $data->name,
             'private' => (int) $data->private,
-            'cache' => serialize($data),
+            'cache' => isset($data->cache) ? serialize($data->cache) : serialize($data),
             'secret' => $secret,
             'timestamp' => REQUEST_TIME,
           )
