@@ -18,7 +18,7 @@ function githubapi_admin_settings() {
     '#type' => 'textfield',
     '#title' => t('Client ID'),
     '#default_value' => !empty($client_id) ? $client_id : $config->get('client_id'),
-    '#description' => t('Client ID from registered APP on /organizations/****/settings/applications.'),
+    '#description' => t('Github Application Client ID.'),
     '#disabled' => !empty($client_id) ? TRUE : FALSE,
   );
 
@@ -26,7 +26,7 @@ function githubapi_admin_settings() {
     '#type' => 'textfield',
     '#title' => t('Client secret'),
     '#default_value' => !empty($client_secret) ? $client_secret : $config->get('client_secret'),
-    '#description' => t('Client secret from registered APP on /organizations/****/settings/applications.'),
+    '#description' => t('Github Application Client Secret.'),
     '#disabled' => !empty($client_secret) ? TRUE : FALSE,
   );
   $form['actions']['#type'] = 'actions';
