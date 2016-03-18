@@ -120,7 +120,6 @@ function githubapi_get_access_token() {
     $params['client_id'] = $config->get('client_id');
     $params['client_secret'] = $config->get('client_secret');
     $params['code'] = filter_xss($_GET['code']);
-    $params['redirect_uri'] = url('admin/config/system/githubapi/settings');
 
     $query = http_build_query($params);
     $response = file_get_contents(GITHUB_URI . '/login/oauth/access_token?' . $query);
@@ -132,10 +131,10 @@ function githubapi_get_access_token() {
       $config->set('token', $token);
       $config->save();
       backdrop_set_message(t('We connected to GitHub now .'));
-      backdrop_goto();
+      backdrop_goto('admin/config/system/githubapi/settings');
     }
   }
   // If we didn't get a token or code, connection to Github failed.
   backdrop_set_message(t('Failed connecting to GitHub.'), 'error');
-  backdrop_goto();
+  backdrop_goto('admin/config/system/githubapi/settings');
 }
