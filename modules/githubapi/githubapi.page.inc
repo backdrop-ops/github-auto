@@ -180,7 +180,8 @@ function githubapi_hook_submit($form, &$form_state) {
     );
     $githubapi->reInitCurl();
     $hook = $githubapi->createOrgHook($settings);
-    
+    backdrop_set_message('<pre>' . print_r($hook,true).'</pre>');
+    return;
     $data = new stdClass;
     $data->id = 0;
     $data->owner->login = $form_state['values']['owner_repo_path'];
