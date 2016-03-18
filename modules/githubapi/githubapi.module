@@ -191,6 +191,10 @@ function githubapi_payload_process() {
       backdrop_write_record('githubapi_payload', $record);
 
       module_invoke_all('githubapi_payload', $event_name, $record, $repo);
+
+      backdrop_add_http_header('Status', '200 Success');
+      exit('Payload was processed.');
+      
     }
   }else{
     backdrop_add_http_header('Status', '403 Bad request');
