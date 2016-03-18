@@ -111,8 +111,10 @@ function githubapi_schema() {
       ),
       'secret' => array(
         'description' => 'Secret key for webhook.',
-        'type' => 'int',
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => TRUE,
+        'default' => '',
       ),      
     ),
     'indexes' => array(
@@ -189,4 +191,12 @@ function githubapi_update_1002() {
   $schema = backdrop_get_schema_unprocessed('githubapi');
   db_add_field('githubapi_repositories', 'secret', $schema['githubapi_repositories']['fields']['secret']);
   db_add_index('githubapi_repositories', 'secret', array('secret'));
+}
+
+/**
+ * Fix secret. It should be varchar.
+ */
+function githubapi_update_1003() {
+  $schema = backdrop_get_schema_unprocessed('githubapi');
+  db_change_field('githubapi_repositories', 'secret', 'secret', $schema['githubapi_repositories']['fields']['secret']);
 }
