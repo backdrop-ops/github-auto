@@ -167,7 +167,8 @@ function githubapi_hook_submit($form, &$form_state) {
     }
   }else{
     // Hook an user or organisation.
-    $githubapi->setOwnerName($form_state['values']['owner_repo_path']);
+    $org = $form_state['values']['owner_repo_path'];
+    $githubapi->setOwnerName($org);
     $settings = array(
       'name' => GITHUB_HOOK_NAME,
       'config' => (object) array(
@@ -179,9 +180,12 @@ function githubapi_hook_submit($form, &$form_state) {
       'active' => true,
     );
     $githubapi->reInitCurl();
-    $hook = $githubapi->createOrgHook($settings);
-    backdrop_set_message('<pre>' . print_r($hook,true).'</pre>');
+    
+    $orgdata = $githubapi->getOrg($org);
+    backdrop_set_message('<pre>' . print_r($orgdata,true).'</pre>');
     return;
+    $hook = $githubapi->createOrgHook($settings);
+
     $data = new stdClass;
     $data->id = 0;
     $data->owner->login = $form_state['values']['owner_repo_path'];
