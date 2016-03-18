@@ -91,20 +91,20 @@ function githubapi_revoke_submit($form, &$form_state){
   $options['headers']['Authorization'] = 'Basic ' . base64_encode($config->get('client_id') . ':' . $config->get('client_secret'));
   $options['method'] = 'DELETE';
   $result = backdrop_http_request($url, $options );
-  backdrop_set_message('<pre>' . print_r($result,true). '</pre>');
   
-  /*
-    debug comment.
-    stdClass Object
-(
-    [data] => {"message":"Bad credentials","documentation_url":"https://developer.github.com/v3"}
-    [status_message] => Unauthorized
-    [code] => 401
-    [error] => Unauthorized
-  */
-  $config->set('token', '');
-  $config->save();
+  switch($result->code){
+    case 204:
+        backdrop_set_message(t('Authorization for an application deleted'));
+        $config->set('token', '');
+        $config->save();
+      break;
+    case 401:
+        backdrop_set_message(t('Unexpected Basic authorization error. Make sure that client_id and client_secret is properly set.'), 'error');
+      break;
+    default:
+        backdrop_set_message(t('Unexpected behaviour. Debug data: status_message = !error.', array('!error' => $result->error), 'error'));
 
+  }
 }
 
 
