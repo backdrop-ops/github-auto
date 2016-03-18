@@ -19,6 +19,7 @@ function githubapi_admin_settings() {
     '#title' => t('Client ID'),
     '#default_value' => !empty($client_id) ? $client_id : $config->get('client_id'),
     '#description' => t('Client ID from registered APP on /organizations/****/settings/applications.'),
+    '#disable' => !empty($client_id) ? TRUE : FALSE,
   );
 
   $form['client_secret'] = array(
@@ -26,6 +27,7 @@ function githubapi_admin_settings() {
     '#title' => t('Client secret'),
     '#default_value' => !empty($client_secret) ? $client_secret : $config->get('client_secret'),
     '#description' => t('Client secret from registered APP on /organizations/****/settings/applications.'),
+    '#disable' => !empty($client_secret) ? TRUE : FALSE,
   );
   $form['actions']['#type'] = 'actions';
   
