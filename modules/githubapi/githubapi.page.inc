@@ -176,6 +176,7 @@ function githubapi_hook_submit($form, &$form_state) {
             'name' => $data->name,
             'private' => (int) $data->private,
             'cache' => serialize($data),
+            'secret' => $secret,
             'timestamp' => REQUEST_TIME,
           )
         )
