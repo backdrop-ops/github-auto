@@ -30,7 +30,7 @@ function githubapi_admin_settings() {
   $form['actions']['#type'] = 'actions';
   
   // Allow save button only if values not stored in settings.php
-  if(empty($client_id) && empty($client_secret)){
+  if(empty($client_id) || empty($client_secret)){
     $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save configuration'),
