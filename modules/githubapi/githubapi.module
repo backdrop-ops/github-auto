@@ -12,7 +12,7 @@ define('GITHUB_API_URI', 'https://api.github.com');
 // URL Github.
 define('GITHUB_URI', 'https://github.com');
 
-define('GITHUB_SCOPE', 'user:email,repo,admin:repo_hook,read:org');
+define('GITHUB_SCOPE', 'user:email,repo,admin:repo_hook,read:org,admin:org_hook');
 define('GITHUB_HOOK_NAME', 'web');
 define('GITHUB_PAYLOAD_PATH', 'githubapi/payload');
 define('GITHUB_PAYLOAD_CONTENT_TYPE', 'json');
