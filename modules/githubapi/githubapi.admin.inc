@@ -109,12 +109,25 @@ function githubapi_link_user_submit($form, &$form_state){
  */
 function githubapi_revoke_submit($form, &$form_state){
   
-    
   $config = config('githubapi.settings');
   
-  $url = GITHUB_API_URI . '/applications/' . $config->get('client_id') . '/tokens/' . $config->get('token');
+  $client_id = settings_get('githubapi_client_id');
+  if(empty($client_id)){
+    $client_id = $config->get('client_id');
+  }
   
-  $options['headers']['Authorization'] = 'Basic ' . base64_encode($config->get('client_id') . ':' . $config->get('client_secret'));
+  $client_secret = settings_get('githubapi_client_secret');
+  if(empty($client_secret)){
+    $client_secret = $config->get('client_secret');
+  }
+  $token = settings_get('githubapi_token');
+  if(empty($token)){
+    $token = $config->get('token');
+  }
+  
+  $url = GITHUB_API_URI . '/applications/' . $client_id . '/tokens/' . $token;
+  
+  $options['headers']['Authorization'] = 'Basic ' . base64_encode($client_id . ':' . $client_secret);
   $options['method'] = 'DELETE';
   $result = backdrop_http_request($url, $options );
   
@@ -142,9 +155,19 @@ function githubapi_get_access_token() {
   if (isset($_GET['code'])) {
     $config = config('githubapi.settings');
 
+    $client_id = settings_get('githubapi_client_id');
+    if(empty($client_id)){
+      $client_id = $config->get('client_id');
+    }
+    
+    $client_secret = settings_get('githubapi_client_secret');
+    if(empty($client_secret)){
+      $client_secret = $config->get('client_secret');
+    }
+  
     $params = array();
-    $params['client_id'] = $config->get('client_id');
-    $params['client_secret'] = $config->get('client_secret');
+    $params['client_id'] = $client_id;
+    $params['client_secret'] = $client_secret;
     $params['code'] = filter_xss($_GET['code']);
 
     $query = http_build_query($params);

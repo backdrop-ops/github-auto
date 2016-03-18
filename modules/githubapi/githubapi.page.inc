@@ -80,8 +80,12 @@ function githubapi_hook_remove_submit($form, &$form_state) {
 
   module_load_include('inc', 'githubapi', 'githubapi_class');
   $config = config('githubapi.settings');
-  $token = $config->get('token');
-
+  
+  $token = settings_get('githubapi_token');
+  if(empty($token)){
+    $token = $config->get('token');
+  }
+  
   $githubapi = new GithubAPI();
 
   $githubapi->setOwnerName($repo->owner);
@@ -131,7 +135,10 @@ function githubapi_hook_submit($form, &$form_state) {
 
   module_load_include('inc', 'githubapi', 'githubapi_class');
   $config = config('githubapi.settings');
-  $token = $config->get('token');
+  $token = settings_get('githubapi_token');
+  if(empty($token)){
+    $token = $config->get('token');
+  }
 
   $githubapi = new GithubAPI();
   $githubapi->setToken($token);
