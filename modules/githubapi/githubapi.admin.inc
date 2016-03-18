@@ -31,11 +31,15 @@ function githubapi_admin_settings() {
   if(empty($token)){
     $form['actions']['auth'] = array(
       '#type' => 'submit',
-      '#value' => t('Get Token for backdrop-ci'),
+      '#value' => t('Authorize an Application'),
       '#submit' => array('githubapi_link_user_submit'),
     );
   }else{
-    backdrop_set_message(t('Bot linked to github!'));
+    $form['actions']['delete'] = array(
+      '#type' => 'submit',
+      '#value' => t('Revoke authorization for an Application'),
+      '#submit' => array('githubapi_revoke_submit'),
+    );
   }
 
   return $form;
@@ -73,6 +77,26 @@ function githubapi_link_user_submit($form, &$form_state){
   backdrop_goto($link, array('absolute' => TRUE));
 
 }
+
+/**
+ * Revoke authorization for an application.
+ */
+function githubapi_revoke_submit($form, &$form_state){
+  
+    
+  $config = config('githubapi.settings');
+  
+  $url = GITHUB_API_URI . '/applications/' . $config->get('client_id') . '/tokens/' . $config->get('token');
+  
+  $options['headers']['Authorization'] = 'Basic ' . base64_encode($config->get('client_id')) . ':' . base64_encode($config->get('client_secret'));
+  $options['method'] = 'DELETE';
+  $result = backdrop_http_request($url, $options );
+  backdrop_set_message('<pre>' . print_r($result,true). '</pre>');
+  $config->set('token', '');
+  $config->save();
+
+}
+
 
 /**
  * Menu callback; Process an Github authentication.
