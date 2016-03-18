@@ -316,6 +316,21 @@ class GithubAPI
     );
   }
 
+
+  public function createOrgHook($settings) {
+    $settings[':org'] = $this->owner_name;
+    return $this->postRequest('orgs/:org/hooks', $settings);
+  }
+
+  public function deleteOrgHook($id) {
+    return $this->deleteRequest(
+        'orgs/:org/hooks/:id', array(
+        ':org' => $this->owner_name,
+        ':id' => $id,
+        )
+    );
+  }
+
   public function getCommit($sha) {
     return $this->getRequest(
         'repos/:owner/:repo/commits/:sha', array(

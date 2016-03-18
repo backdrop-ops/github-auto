@@ -164,10 +164,29 @@ function githubapi_hook_submit($form, &$form_state) {
     }
   }else{
       backdrop_set_message(t('DEBUG OWNER !owner ',array('!owner' => $form_state['values']['owner_repo_path'])) );
- 
-    
     // Hook an user or organisation.
     $githubapi->setOwnerName($form_state['values']['owner_repo_path']);
+    $settings = array(
+      'name' => GITHUB_HOOK_NAME,
+      'config' => (object) array(
+          'url' => $base_url . $base_path . GITHUB_PAYLOAD_PATH,
+          'content_type' => GITHUB_PAYLOAD_CONTENT_TYPE,
+          'secret' => $secret,
+        ),
+      'events' => array ('push', 'pull_request', 'create', 'delete', 'release', 'issues', 'issue_comment', 'follow', 'fork', 'status' , 'commit_comment', 'pull_request_review_comment' ),
+      'active' => true,
+    );
+    $githubapi->reInitCurl();
+    $hook = $githubapi->createOrgHook($settings);
+    
+    $data = new stdClass;
+    $data->id = 0;
+    $data->owner->login = $form_state['values']['owner_repo_path'];
+    $data->name = '*';
+    $data->private = TRUE;
+    $data->cache = '';
+    backdrop_set_message('<pre>' . print_r($hook,true).'</pre>');
+
   }
 
 
