@@ -138,8 +138,8 @@ function githubapi_hook_submit($form, &$form_state) {
   $hook = FALSE;
   $secret = '';
   
-  
-  if(strpos('/', $form_state['values']['owner_repo_path'])){
+  $is_owner_repo = strpos('/', $form_state['values']['owner_repo_path']);
+  if(FALSE !== $is_owner_repo){
     // Hook a repo.
     $owner_repo = explode("/", $form_state['values']['owner_repo_path']);
     $githubapi->setOwnerName($owner_repo[0]);
@@ -192,5 +192,11 @@ function githubapi_hook_submit($form, &$form_state) {
         )
       )
       ->execute();
+    if(FALSE !== $is_owner_repo){
+      backdrop_set_message(t('Repository !owner/!repo hooked',array('!owner' => $owner_repo[0], '!repo' => $owner_repo[1])));  
+    }else{
+      backdrop_set_message(t('Owner !owner hooked',array('!owner' => $form_state['values']['owner_repo_path'])));      
+    }
+    
   }
 }
