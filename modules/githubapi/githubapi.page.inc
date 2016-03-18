@@ -168,6 +168,11 @@ function githubapi_hook_submit($form, &$form_state) {
   }else{
     // Hook an user or organisation.
     $org = $form_state['values']['owner_repo_path'];
+    $org_data = $githubapi->getOrg($org);
+    if($org_data->message == 'Not Found'){
+      backdrop_set_message(t('There is no !org organisation', array('!org' => $org)), 'error');
+      return;
+    }
     $githubapi->setOwnerName($org);
     $settings = array(
       'name' => GITHUB_HOOK_NAME,
@@ -179,19 +184,19 @@ function githubapi_hook_submit($form, &$form_state) {
       'events' => array ('push', 'pull_request', 'create', 'delete', 'release', 'issues', 'issue_comment', 'follow', 'fork', 'status' , 'commit_comment', 'pull_request_review_comment' ),
       'active' => true,
     );
-    $githubapi->reInitCurl();
-    
-    $orgdata = $githubapi->getOrg($org);
-    backdrop_set_message('<pre>' . print_r($orgdata,true).'</pre>');
-    return;
+    $githubapi->reInitCurl();    
     $hook = $githubapi->createOrgHook($settings);
+    if($hook->message == 'Not Found'){
+      backdrop_set_message(t('You don\'t have right to add hook to !org organisation', array('!org' => $org)), 'error');
+      return;
+    }
 
     $data = new stdClass;
     $data->id = 0;
-    $data->owner->login = $form_state['values']['owner_repo_path'];
+    $data->owner->login = $org;
     $data->name = '*';
     $data->private = TRUE;
-    $data->cache = '';
+    $data->cache = $org_data;
   }
 
 
