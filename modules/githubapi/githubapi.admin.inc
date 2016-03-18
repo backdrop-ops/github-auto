@@ -120,6 +120,7 @@ function githubapi_get_access_token() {
     $params['client_id'] = $config->get('client_id');
     $params['client_secret'] = $config->get('client_secret');
     $params['code'] = filter_xss($_GET['code']);
+    $params['redirect_uri'] = url('admin/config/system/githubapi/settings');
 
     $query = http_build_query($params);
     $response = file_get_contents(GITHUB_URI . '/login/oauth/access_token?' . $query);
