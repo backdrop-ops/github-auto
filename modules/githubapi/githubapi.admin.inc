@@ -9,25 +9,40 @@
  */
 function githubapi_admin_settings() {
   $config = config('githubapi.settings');
+  
+  // Use setting.php values if exists.
+  $client_id = settings_get('githubapi_client_id');
+  $client_secret = settings_get('githubapi_client_secret');
+  
   $form['client_id'] = array(
     '#type' => 'textfield',
     '#title' => t('Client ID'),
-    '#default_value' => $config->get('client_id'),
+    '#default_value' => !empty($client_id) ? $client_id : $config->get('client_id'),
     '#description' => t('Client ID from registered APP on /organizations/****/settings/applications.'),
   );
 
   $form['client_secret'] = array(
     '#type' => 'textfield',
     '#title' => t('Client secret'),
-    '#default_value' => $config->get('client_secret'),
+    '#default_value' => !empty($client_secret) ? $client_secret : $config->get('client_secret'),
     '#description' => t('Client secret from registered APP on /organizations/****/settings/applications.'),
   );
   $form['actions']['#type'] = 'actions';
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save configuration'),
-  );
-  $token = $config->get('token');
+  
+  // Allow save button only if values not stored in settings.php
+  if(empty($client_id) && empty($client_secret)){
+    $form['actions']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Save configuration'),
+    );
+  }
+  
+  $token = settings_get('githubapi_token');
+  
+  if(empty($token)){
+    $token = $config->get('token');
+  }
+  
   if(empty($token)){
     $form['actions']['auth'] = array(
       '#type' => 'submit',
@@ -51,8 +66,19 @@ function githubapi_admin_settings() {
 function githubapi_admin_settings_submit($form, &$form_state) {
 
   $config = config('githubapi.settings');
-  $config->set('client_id', $form_state['values']['client_id']);
-  $config->set('client_secret', $form_state['values']['client_secret']);
+  
+  $client_id = settings_get('githubapi_client_id');
+  $client_secret = settings_get('githubapi_client_secret');
+  
+  // Store only if value not stored in settings.php.
+  if(empty($client_id)){
+    $config->set('client_id', $form_state['values']['client_id']);
+  }
+
+  // Store only if value not stored in settings.php.
+  if(empty($client_secret)){
+    $config->set('client_secret', $form_state['values']['client_secret']);
+  }
   $config->save();
   backdrop_set_message(t('The configuration options have been saved.'));
 }
