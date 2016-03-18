@@ -88,10 +88,20 @@ function githubapi_revoke_submit($form, &$form_state){
   
   $url = GITHUB_API_URI . '/applications/' . $config->get('client_id') . '/tokens/' . $config->get('token');
   
-  $options['headers']['Authorization'] = 'Basic ' . base64_encode($config->get('client_id')) . ':' . base64_encode($config->get('client_secret'));
+  $options['headers']['Authorization'] = 'Basic ' . base64_encode($config->get('client_id') . ':' . $config->get('client_secret'));
   $options['method'] = 'DELETE';
   $result = backdrop_http_request($url, $options );
   backdrop_set_message('<pre>' . print_r($result,true). '</pre>');
+  
+  /*
+    debug comment.
+    stdClass Object
+(
+    [data] => {"message":"Bad credentials","documentation_url":"https://developer.github.com/v3"}
+    [status_message] => Unauthorized
+    [code] => 401
+    [error] => Unauthorized
+  */
   $config->set('token', '');
   $config->save();
 
