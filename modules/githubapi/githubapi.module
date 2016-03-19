@@ -116,9 +116,6 @@ function githubapi_payload_process() {
       backdrop_add_http_header('Status', '403 Empty or broken data received');
       exit('Empty or broken data received.');
     }
-    
-    // Debug info.
-    print_r($event);
 
     $repository_name = '';
 
@@ -163,7 +160,7 @@ function githubapi_payload_process() {
         ->fetchObject();
       if(empty($repo)){
         backdrop_add_http_header('Status', '403 We do not process this repo.');
-        exit('We did not find owner information.');
+        exit('We did not find repo information.');
       }
     }else{
       $repo = db_select('githubapi_repositories', 'gr')
