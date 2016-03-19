@@ -116,6 +116,9 @@ function githubapi_payload_process() {
       backdrop_add_http_header('Status', '403 Empty or broken data received');
       exit('Empty or broken data received.');
     }
+    
+    // Debug info.
+    print_r($event);
 
     $repository_name = '';
 
