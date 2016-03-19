@@ -138,7 +138,12 @@ function githubapi_payload_process() {
         $owner_name = $event->organization->login;
       }
     }
-
+    if($event_name == 'ping'){
+      if(isset($event->organization->login)){
+        $owner_name = $event->organization->login;
+      }
+    }
+    
     if(empty($owner_name)){
       backdrop_add_http_header('Status', '403 Unsupported Event type.');
       exit('We did not find owner information.');
