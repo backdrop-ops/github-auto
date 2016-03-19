@@ -147,7 +147,7 @@ function githubapi_hook_submit($form, &$form_state) {
   global $base_path;
   
   $hook = FALSE;
-  $secret = '';
+  $secret = backdrop_random_key();
   
   $is_owner_repo = strpos($form_state['values']['owner_repo_path'], '/');
   if(FALSE !== $is_owner_repo){
@@ -158,7 +158,6 @@ function githubapi_hook_submit($form, &$form_state) {
     
     if($data = $githubapi->getRepo()){
       // Make sure we do have access to repo.
-      $secret = backdrop_random_key();
       $settings = array(
         'name' => GITHUB_HOOK_NAME,
         'config' => (object) array(
