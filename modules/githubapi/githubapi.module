@@ -146,8 +146,6 @@ function githubapi_payload_process() {
     
     if(empty($owner_name)){
       backdrop_add_http_header('Status', '403 Unsupported Event type.');
-      echo "Ownername='".$owner_name."'";
-      print_r($event->repository);
       exit('We did not find owner information.');
     }
 
@@ -170,8 +168,16 @@ function githubapi_payload_process() {
         ->execute()
         ->fetchObject();
       if(empty($repo)){
+        $repo = db_select('githubapi_repositories', 'gr')
+          ->fields('gr')
+          ->condition('name', "*")
+          ->condition('owner', $owner_name)
+          ->execute()
+          ->fetchObject();
+      }        
+      if(empty($repo)){
         backdrop_add_http_header('Status', '403 We do not process this repo.');
-        exit('We did not find owner information.');
+        exit('We did not find repo information.');
       }
     }
 
