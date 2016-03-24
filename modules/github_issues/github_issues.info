@@ -1,7 +1,0 @@
-name = github_issues
-description = Github issues automation.
-backdrop = 1.x
-version = 1.x-1.0
-package = API
-type = module
-dependencies[] = githubapi
