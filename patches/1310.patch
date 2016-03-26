@@ -1,0 +1,126 @@
+From aa8676ce5099cfe07847b58b322715af7aaa4aa5 Mon Sep 17 00:00:00 2001
+From: Gor Martsen <Gor.martsen@gmail.com>
+Date: Sat, 26 Mar 2016 04:22:14 -0500
+Subject: [PATCH] #1297 - Resolving issue when core is symlink to another
+ directory.
+
+Also helps to have files and settings.php out of github repository
++ Resolve issue with sandboxes, when PR update reset settings.php
+PR update reset settings.php because we do reset latest changes to
+master with is affect latest changes to settings.php
+---
+ core/authorize.php | 13 +++++++++----
+ core/cron.php      | 15 ++++++++++-----
+ core/install.php   | 13 +++++++++----
+ core/update.php    | 13 +++++++++----
+ 4 files changed, 37 insertions(+), 17 deletions(-)
+
+diff --git a/core/authorize.php b/core/authorize.php
+index c436547..d938f1b 100755
+--- a/core/authorize.php
++++ b/core/authorize.php
+@@ -20,13 +20,18 @@
+  * @link authorize Authorized operation helper functions @endlink
+  */
+ 
+-// Change the directory to the Backdrop root.
+-chdir('..');
+-
+ /**
+  * Defines the root directory of the Backdrop installation.
++ *
++ * We are using dirname to get path to backdrop root folder without symlink resolving.
++ * This way you can keep github repository out of the DOCROOT and have files directory
++ * and settings.php out of github repository.
++ * Relate to issues: #1297, #346.
+  */
+-define('BACKDROP_ROOT', getcwd());
++define('BACKDROP_ROOT', dirname(dirname($_SERVER['SCRIPT_FILENAME'])));
++
++// Change the directory to the Backdrop root.
++chdir(BACKDROP_ROOT);
+ 
+ /**
+  * Global flag to identify update.php and authorize.php runs.
+diff --git a/core/cron.php b/core/cron.php
+index 8dcf1e9..da91117 100755
+--- a/core/cron.php
++++ b/core/cron.php
+@@ -5,13 +5,18 @@
+  * Handles incoming requests to fire off regularly-scheduled tasks (cron jobs).
+  */
+ 
+-// Change the directory to the Backdrop root.
+-chdir('..');
+-
+ /**
+- * Root directory of Backdrop installation.
++ * Defines the root directory of the Backdrop installation.
++ *
++ * We are using dirname to get path to backdrop root folder without symlink resolving.
++ * This way you can keep github repository out of the DOCROOT and have files directory
++ * and settings.php out of github repository.
++ * Relate to issues: #1297, #346.
+  */
+-define('BACKDROP_ROOT', getcwd());
++define('BACKDROP_ROOT', dirname(dirname($_SERVER['SCRIPT_FILENAME'])));
++
++// Change the directory to the Backdrop root.
++chdir(BACKDROP_ROOT);
+ 
+ include_once BACKDROP_ROOT . '/core/includes/bootstrap.inc';
+ backdrop_bootstrap(BACKDROP_BOOTSTRAP_FULL);
+diff --git a/core/install.php b/core/install.php
+index cab87b6..d6aaaeb 100755
+--- a/core/install.php
++++ b/core/install.php
+@@ -5,13 +5,18 @@
+  * Initiates a browser-based installation of Backdrop.
+  */
+ 
+-// Change the directory to the Backdrop root.
+-chdir('..');
+-
+ /**
+  * Defines the root directory of the Backdrop installation.
++ *
++ * We are using dirname to get path to backdrop root folder without symlink resolving.
++ * This way you can keep github repository out of the DOCROOT and have files directory
++ * and settings.php out of github repository.
++ * Relate to issues: #1297, #346.
+  */
+-define('BACKDROP_ROOT', getcwd());
++define('BACKDROP_ROOT', dirname(dirname($_SERVER['SCRIPT_FILENAME'])));
++
++// Change the directory to the Backdrop root.
++chdir(BACKDROP_ROOT);
+ 
+ /**
+  * Global flag to indicate the site is in installation mode.
+diff --git a/core/update.php b/core/update.php
+index 084d9c4..bfd007e 100755
+--- a/core/update.php
++++ b/core/update.php
+@@ -14,13 +14,18 @@
+  * back to its original state!
+  */
+ 
+-// Change the directory to the Backdrop root.
+-chdir('..');
+-
+ /**
+  * Defines the root directory of the Backdrop installation.
++ *
++ * We are using dirname to get path to backdrop root folder without symlink resolving.
++ * This way you can keep github repository out of the DOCROOT and have files directory
++ * and settings.php out of github repository.
++ * Relate to issues: #1297, #346.
+  */
+-define('BACKDROP_ROOT', getcwd());
++define('BACKDROP_ROOT', dirname(dirname($_SERVER['SCRIPT_FILENAME'])));
++
++// Change the directory to the Backdrop root.
++chdir(BACKDROP_ROOT);
+ 
+ // Exit early if running an incompatible PHP version to avoid fatal errors.
+ // The minimum version is specified explicitly, as BACKDROP_MINIMUM_PHP is not
