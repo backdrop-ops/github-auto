@@ -13,7 +13,12 @@ ln -s $GITLC_DEPLOY_DIR/.htaccess ./
 
 # Unlink settings.php and copy instead.
 rm -f settings.php
-cp $GITLC_DEPLOY_DIR settings.php
+cp $GITLC_DEPLOY_DIR/settings.php ./
+
+# Unlink files and copy instead.
+rm -f files
+cp -r $GITLC_DEPLOY_DIR/files ./
+
 
 # Apply patch from PR #1310.
 cat /home/qa/tools/patches/1310.patch|patch -p 1 -N
