@@ -13,5 +13,5 @@ This repository hold scripts for backdrop/backdrop repository to deploy websites
   - **$ACCOUNT_MAIL** : depends on borq_qa/.gitlc.yml can be changed there.
   - **$SITE_USER** : admin
   - **$SITE_PASSWORD** : random string.
-  
+ 
 See more details in backdrop-ops/backdropcms.org/www/modules/custom/borg_qa/borg_qa.module hook_gitlc_webhook
