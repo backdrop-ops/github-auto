@@ -22,4 +22,4 @@ cp -r $GITLC_DEPLOY_DIR/files ./
 
 #install backdrop
 
-php $SITEPATH/core/scripts/install.sh  --db-url=mysql://test:localhost/test
+php $SITEPATH/core/scripts/install.sh  --db-url=mysql://test:@localhost/test --root=/home/robin/www
