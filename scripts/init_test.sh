@@ -21,5 +21,9 @@ cp -r $GITLC_DEPLOY_DIR/files ./
 
 
 #install backdrop
-
 php $SITEPATH/core/scripts/install.sh  --db-url=mysql://test:@localhost/test --root=/home/robin/www
+
+# Install and run backdrop/coder
+composer require backdrop/coder
+./vendor/bin/phpcs --standard=./vendor/backdrop/coder/coder_sniffer/Backdrop core
+
